@@ -3,596 +3,793 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>وَراثة WIRATHA — نموذج تشغيلي تفاعلي</title>
+<title>وَراثة WIRATHA — النموذج التشغيلي المزدوج</title>
 <style>
 /* ═══════════════════════════════════════════════════════════
-   WIRATHA MVP — Interactive Genetic Decision Support
-   Pure CSS + Vanilla JS · iOS Offline Compliant
+   WIRATHA DUAL-MODE ENTERPRISE MVP
+   Mode 1: Guided Scenarios | Mode 2: Interactive Playground
+   Pure CSS + Vanilla JS · iOS Offline · RTL Arabic
    ═══════════════════════════════════════════════════════════ */
 
-/* ─── Reset ─── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{
-  font-family:'Segoe UI','Tahoma','Tajawal',sans-serif;
-  background:#0A2540;
-  color:#EAF2F4;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-  line-height:1.7;
-}
+body{font-family:'Segoe UI','Tahoma','Tajawal',sans-serif;background:#0A2540;color:#EAF2F4;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.7}
 
-/* ─── Variables ─── */
-:root{
-  --deep:#0A2540;--deeper:#06182B;
-  --teal:#0FB5A8;--tealdk:#0A7D74;
-  --cyan:#22D3EE;--cyanlt:rgba(34,211,238,.15);
-  --coral:#FF6B6B;--coralsoft:rgba(255,107,107,.15);
-  --gold:#F4B860;--goldlt:rgba(244,184,96,.15);
-  --mint:#34D399;--mintsoft:rgba(52,211,153,.15);
-  --mist:#EAF2F4;--greyx:#5B7185;
-}
+:root{--deep:#0A2540;--deeper:#06182B;--teal:#0FB5A8;--tealdk:#0A7D74;--cyan:#22D3EE;--cyanlt:rgba(34,211,238,.15);--coral:#FF6B6B;--coralsoft:rgba(255,107,107,.15);--gold:#F4B860;--goldlt:rgba(244,184,96,.15);--mint:#34D399;--mintlt:rgba(52,211,153,.15);--mist:#EAF2F4;--greyx:#5B7185;--line:rgba(255,255,255,.1)}
 
-/* ─── Selection ─── */
 ::selection{background:#0FB5A8;color:#06182B}
 
-/* ─── Layout ─── */
+/* Background */
+.bg-glow{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 70% 20%,rgba(15,181,168,.2),transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(34,211,238,.1),transparent 55%)}
+.bg-dots{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(255,255,255,.03)1px,transparent 1px);background-size:24px 24px}
+
+/* Layout */
 .screen{display:none;min-height:100vh;position:relative}
-.screen.active{display:flex;flex-direction:column;animation:fadeIn .6s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{display:flex;flex-direction:column;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.container{width:100%;max-width:720px;margin:0 auto;padding:28px 22px;position:relative;z-index:2}
 
-.container{width:100%;max-width:680px;margin:0 auto;padding:28px 24px;position:relative;z-index:2}
+/* Typography */
+.fh{font-family:'Segoe UI','Tahoma',sans-serif;font-weight:700;letter-spacing:-.02em}
+.tc{text-align:center}
+.c-teal{color:var(--teal)}.c-cyan{color:var(--cyan)}.c-coral{color:var(--coral)}.c-gold{color:var(--gold)}.c-mint{color:var(--mint)}.c-grey{color:var(--greyx)}.c-mist{color:var(--mist)}
+.xs{font-size:.75rem}.sm{font-size:.875rem}.lg{font-size:1.125rem}.xl{font-size:1.25rem}.x2{font-size:1.75rem}.x3{font-size:2.25rem}
+.bold{font-weight:700}.light{font-weight:300}
+.kicker{letter-spacing:.22em;text-transform:uppercase}
 
-/* ─── Background Effects ─── */
-.glow-teal{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 70% 20%,rgba(15,181,168,.2),transparent 60%);z-index:0}
-.glow-cyan{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 80%,rgba(34,211,238,.1),transparent 55%);z-index:0}
-.dots{position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.03)1px,transparent 1px);background-size:24px 24px;z-index:0}
-
-/* ─── Typography ─── */
-.font-head{font-family:'Segoe UI','Tahoma',sans-serif;font-weight:700;letter-spacing:-.02em}
-.text-center{text-align:center}
-.text-teal{color:var(--teal)}
-.text-cyan{color:var(--cyan)}
-.text-coral{color:var(--coral)}
-.text-gold{color:var(--gold)}
-.text-mint{color:var(--mint)}
-.text-greyx{color:var(--greyx)}
-.text-mist{color:var(--mist)}
-.text-xs{font-size:.75rem}
-.text-sm{font-size:.875rem}
-.text-lg{font-size:1.125rem}
-.text-xl{font-size:1.25rem}
-.text-2xl{font-size:1.75rem}
-.text-3xl{font-size:2.25rem}
-.font-bold{font-weight:700}
-.font-light{font-weight:300}
-.leading-tight{line-height:1.3}
-.leading-relaxed{line-height:1.7}
-.kicker{letter-spacing:.25em;text-transform:uppercase}
-
-/* ─── Buttons ─── */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:16px 32px;border-radius:14px;border:none;font-family:inherit;
-  font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s ease;
-  -webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;
-}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 28px;border-radius:14px;border:none;font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .28s ease;-webkit-tap-highlight-color:transparent;position:relative}
 .btn:active{transform:scale(.96)}
-.btn-teal{background:linear-gradient(135deg,var(--teal),var(--tealdk));color:#fff;box-shadow:0 4px 20px rgba(15,181,168,.35)}
-.btn-teal:hover{box-shadow:0 6px 28px rgba(15,181,168,.5);transform:translateY(-2px)}
-.btn-coral{background:linear-gradient(135deg,var(--coral),#E05757);color:#fff;box-shadow:0 4px 20px rgba(255,107,107,.3)}
-.btn-coral:hover{box-shadow:0 6px 28px rgba(255,107,107,.45);transform:translateY(-2px)}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#C9A227);color:#0A2540;box-shadow:0 4px 20px rgba(244,184,96,.3)}
-.btn-gold:hover{box-shadow:0 6px 28px rgba(244,184,96,.45);transform:translateY(-2px)}
-.btn-outline{background:transparent;border:1.5px solid rgba(15,181,168,.5);color:var(--teal)}
-.btn-outline:hover{background:rgba(15,181,168,.1);border-color:var(--teal)}
+.btn-teal{background:linear-gradient(135deg,var(--teal),var(--tealdk));color:#fff;box-shadow:0 4px 18px rgba(15,181,168,.32)}
+.btn-teal:hover{box-shadow:0 6px 26px rgba(15,181,168,.48);transform:translateY(-2px)}
+.btn-coral{background:linear-gradient(135deg,var(--coral),#E05757);color:#fff;box-shadow:0 4px 18px rgba(255,107,107,.28)}
+.btn-coral:hover{box-shadow:0 6px 26px rgba(255,107,107,.42);transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#C9A227);color:#0A2540;box-shadow:0 4px 18px rgba(244,184,96,.28)}
+.btn-gold:hover{box-shadow:0 6px 26px rgba(244,184,96,.42);transform:translateY(-2px)}
+.btn-mint{background:linear-gradient(135deg,var(--mint),#0E9F6E);color:#fff;box-shadow:0 4px 18px rgba(52,211,153,.28)}
+.btn-mint:hover{box-shadow:0 6px 26px rgba(52,211,153,.42);transform:translateY(-2px)}
+.btn-outline{background:transparent;border:1.5px solid rgba(15,181,168,.45);color:var(--teal)}
+.btn-outline:hover{background:rgba(15,181,168,.1)}
+.btn-purple{background:linear-gradient(135deg,#8B7FE8,#6B5FC7);color:#fff;box-shadow:0 4px 18px rgba(139,127,232,.28)}
+.btn-pressed{opacity:.5;pointer-events:none}
+.btn-xl{padding:18px 36px;font-size:1.1rem;border-radius:16px;width:100%}
+.btn-huge{padding:22px 40px;font-size:1.15rem;border-radius:18px;width:100%}
 
-.btn-pressed{opacity:.55;pointer-events:none;position:relative}
-.btn-pressed::after{content:'✓';position:absolute;left:16px;font-size:1.2rem}
-
-.btn-group{display:flex;flex-direction:column;gap:14px;margin-top:24px}
-
-/* ─── Cards ─── */
-.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:24px;backdrop-filter:blur(10px);transition:all .3s ease}
+/* Cards */
+.card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:24px;transition:all .3s ease}
 .card:hover{border-color:rgba(15,181,168,.3);box-shadow:0 8px 32px rgba(15,181,168,.1)}
 .card-cyan{border-color:rgba(34,211,238,.25);background:var(--cyanlt)}
-.card-mint{border-color:rgba(52,211,153,.25);background:var(--mintsoft)}
+.card-mint{border-color:rgba(52,211,153,.25);background:var(--mintlt)}
 .card-coral{border-color:rgba(255,107,107,.25);background:var(--coralsoft)}
 .card-gold{border-color:rgba(244,184,96,.25);background:var(--goldlt)}
+.card-green{background:rgba(14,159,110,.1);border-color:rgba(52,211,153,.3)}
+.card-mode{background:rgba(255,255,255,.05);border:1.5px solid rgba(15,181,168,.2);border-radius:22px;padding:32px;transition:all .35s ease;cursor:pointer;text-align:center}
+.card-mode:hover{border-color:var(--teal);box-shadow:0 12px 40px rgba(15,181,168,.2);transform:translateY(-5px)}
+.card-mode .icon{font-size:3.5rem;margin-bottom:16px;display:block}
 
-/* ─── Risk Gauge ─── */
-.gauge-wrap{width:220px;height:220px;margin:0 auto;position:relative}
+/* Mode selector active */
+.mode-grid{display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:640px){.mode-grid{grid-template-columns:1fr 1fr}}
+
+/* Gauge */
+.gauge-wrap{width:200px;height:200px;margin:0 auto;position:relative}
 .gauge-svg{width:100%;height:100%;transform:rotate(-90deg)}
-.gauge-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:18}
-.gauge-fill{fill:none;stroke-width:18;stroke-linecap:round;transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1)}
-.gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.gauge-value{font-size:3.2rem;font-weight:700;color:var(--teal);line-height:1}
-.gauge-label{font-size:.85rem;color:var(--greyx);margin-top:6px}
+.gauge-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:16}
+.gauge-fill{fill:none;stroke-width:16;stroke-linecap:round;transition:stroke-dashoffset 2.2s cubic-bezier(.4,0,.2,1)}
+.gauge-ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge-val{font-size:2.8rem;font-weight:700;line-height:1}
+.gauge-lbl{font-size:.8rem;color:var(--greyx);margin-top:6px}
 
-/* ─── Progress Bars ─── */
-.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.progress-label{width:90px;font-size:.85rem;text-align:left;flex-shrink:0}
-.progress-track{flex:1;height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
-.progress-fill{height:100%;border-radius:99px;transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+/* Progress bars */
+.prow{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.prow-lbl{width:80px;font-size:.8rem;text-align:left;flex-shrink:0}
+.prow-trk{flex:1;height:9px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.prow-fil{height:100%;border-radius:99px;transition:width 1.6s cubic-bezier(.4,0,.2,1)}
 
-/* ─── Spinner ─── */
-.spinner-wrap{text-align:center;padding:60px 0}
-.spinner{width:64px;height:64px;margin:0 auto 24px;border:3px solid rgba(255,255,255,.08);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
+/* Spinner */
+.spin{width:56px;height:56px;margin:0 auto 20px;border:3px solid rgba(255,255,255,.08);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.spinner-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
-.spinner-dots span{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:bounce 1.4s ease-in-out infinite both}
-.spinner-dots span:nth-child(1){animation-delay:-.32s}
-.spinner-dots span:nth-child(2){animation-delay:-.16s}
-@keyframes bounce{0%,80%,100%{transform:scale(0);opacity:.3}40%{transform:scale(1);opacity:1}}
 
-/* ─── Alert ─── */
-.alert{padding:16px 20px;border-radius:12px;margin:16px 0;font-size:.9rem;display:none;align-items:center;gap:12px;animation:slideIn .4s ease}
+/* Alerts */
+.alert{padding:14px 18px;border-radius:12px;font-size:.88rem;display:none;align-items:center;gap:12px;animation:slIn .35s ease;margin:14px 0}
 .alert.show{display:flex}
-.alert-warn{background:rgba(244,184,96,.12);border:1px solid rgba(244,184,96,.3);color:var(--gold)}
-.alert-info{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);color:var(--cyan)}
-.alert-success{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);color:var(--mint)}
-@keyframes slideIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.alert-gold{background:rgba(244,184,96,.1);border:1px solid rgba(244,184,96,.25);color:var(--gold)}
+.alert-mint{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);color:var(--mint)}
+.alert-cyan{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);color:var(--cyan)}
+@keyframes slIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ─── Step Dots ─── */
-.steps{display:flex;align-items:center;gap:8px;margin-bottom:32px}
-.step-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s ease}
-.step-dot.active{background:var(--teal);box-shadow:0 0 8px rgba(15,181,168,.5)}
-.step-line{flex:1;height:2px;background:rgba(255,255,255,.08)}
+/* Steps */
+.steps{display:flex;align-items:center;gap:8px;margin-bottom:28px;max-width:260px;margin-left:auto;margin-right:auto}
+.sdot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .3s ease}
+.sdot.on{background:var(--teal);box-shadow:0 0 8px rgba(15,181,168,.5)}
+.sline{flex:1;height:2px;background:rgba(255,255,255,.08)}
 
-/* ─── Counter ─── */
-.counter-value{font-size:2.5rem;font-weight:700;line-height:1}
+/* Select / Input */
+select,input[type="text"]{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(15,181,168,.3);background:rgba(255,255,255,.05);color:#EAF2F4;font-family:inherit;font-size:1rem;outline:none;transition:all .25s}
+select:focus,input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,181,168,.15)}
+select option{background:#0A2540;color:#EAF2F4}
 
-/* ─── Hairline ─── */
-.hairline{height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent);margin:24px 0}
+/* Form row */
+.frow{margin-bottom:18px}
+.frow label{display:block;margin-bottom:6px;font-size:.88rem;color:var(--greyx)}
 
-/* ─── Footer ─── */
-.foot{padding:32px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.08)}
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:600px){.g2{grid-template-columns:1fr 1fr}.g2-col-span{grid-column:span 2}}
 
-/* ─── Option Cards Grid ─── */
-.options-grid{display:grid;grid-template-columns:1fr;gap:16px}
-@media(min-width:640px){.options-grid{grid-template-columns:1fr 1fr}}
+/* Counter */
+.cntr{font-size:2.2rem;font-weight:700;line-height:1}
 
-/* ─── Pulse ring ─── */
-.pulse-ring{position:absolute;inset:-4px;border-radius:inherit;border:2px solid var(--teal);opacity:0;animation:pulse 2s ease-out infinite}
-@keyframes pulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.08);opacity:0}}
+/* Hairline */
+.hl{height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent);margin:20px 0}
 
-/* ─── HR ─── */
-hr{border:none;height:1px;background:rgba(255,255,255,.1);margin:20px 0}
+/* Tag chip */
+.chip{display:inline-flex;align-items:center;padding:6px 14px;border-radius:99px;font-size:.78rem;font-weight:700;border:1px solid var(--line);background:rgba(255,255,255,.04)}
 
-/* ─── iOS ─── */
-@supports(-webkit-touch-callout:none){body{padding-bottom:env(safe-area-inset-bottom,0)}}
+/* Tab buttons for scenarios */
+.stabs{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px}
+.stab{flex:1;min-width:0;padding:12px 8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--greyx);font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .25s;-webkit-tap-highlight-color:transparent;text-align:center;white-space:nowrap}
+.stab.on{border-color:var(--teal);background:rgba(15,181,168,.12);color:var(--teal)}
+.stab:active{transform:scale(.96)}
+
+/* Back button */
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--greyx);font-size:.85rem;background:none;border:none;cursor:pointer;margin-bottom:16px;padding:4px 0;-webkit-tap-highlight-color:transparent}
+.back-btn:hover{color:var(--teal)}
+
+/* Scenario content */
+.sc-body{display:none}
+.sc-body.on{display:block;animation:fadeIn .4s ease}
+
+/* Cert */
+.cert{border:2px solid var(--mint);border-radius:20px;padding:32px;text-align:center;background:rgba(14,159,110,.08);position:relative;overflow:hidden}
+.cert-stamp{position:absolute;top:12px;left:12px;opacity:.15;font-size:4rem}
+
+/* Footer */
+.foot{padding:28px 22px;text-align:center;border-top:1px solid var(--line)}
+
+/* Utility */
+.mt1{margin-top:4px}.mt2{margin-top:8px}.mt3{margin-top:12px}.mt4{margin-top:16px}.mt5{margin-top:20px}.mt6{margin-top:24px}
+.mb1{margin-bottom:4px}.mb2{margin-bottom:8px}.mb3{margin-bottom:12px}.mb4{margin-bottom:16px}.mb5{margin-bottom:20px}
+.flex{display:flex}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.flex-wrap{flex-wrap:wrap}.gap2{gap:8px}.gap3{gap:12px}.gap4{gap:16px}
+.w-full{width:100%}.mxw{max-width:420px;margin-left:auto;margin-right:auto}
+
+/* Scroll */
+@media(max-width:600px){.container{padding:20px 16px}}
+@supports(-webkit-touch-callout:none){body{padding-bottom:max(env(safe-area-inset-bottom),6px)}}
 </style>
 </head>
 <body>
 
-<!-- Background layers -->
-<div class="glow-teal"></div>
-<div class="glow-cyan"></div>
-<div class="dots"></div>
+<!-- Background -->
+<div class="bg-glow"></div><div class="bg-dots"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 0: MAIN GATEWAY — Dual Mode Selection
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen active" id="gw">
+  <div class="container" style="display:flex;flex-direction:column;justify-content:center;min-height:100vh">
+
+    <div class="tc mb5">
+      <p class="kicker c-teal xs mb3">وَراثة WIRATHA — النموذج التشغيلي المزدوج</p>
+      <h1 class="fh x3" style="margin-bottom:6px">وَراثة</h1>
+      <p class="c-teal xl bold" style="letter-spacing:.35em">WIRATHA</p>
+      <div class="hl" style="max-width:100px;margin:20px auto"></div>
+      <p class="c-grey lg light">اختر وضع التجربة المناسب لاحتياجاتك</p>
+    </div>
+
+    <div class="mode-grid">
+      <!-- Card 1: Guided Scenarios -->
+      <div class="card-mode" onclick="goTo('mode1')">
+        <span class="icon">📊</span>
+        <h3 class="fh xl c-mint mb2">السيناريوهات الموجهة</h3>
+        <p class="c-grey sm" style="margin-bottom:16px">للمستثمرين والشركاء الاستراتيجيين</p>
+        <div class="flex flex-wrap justify-center gap2" style="margin-bottom:16px">
+          <span class="chip c-teal">3 سيناريوهات</span>
+          <span class="chip c-cyan">عرض توضيحي</span>
+        </div>
+        <p class="c-grey xs" style="line-height:1.6">
+          استعراض ثلاث حلات محاكاة واقعية: الخطر الحرج، التداخل الوراثي لزواج الأقارب، والتوافق الآمن — مع الترجمة الإنسانية والخيارات الإنجابية.
+        </p>
+        <button class="btn btn-teal btn-xl mt4">استعراض السيناريوهات ←</button>
+      </div>
+
+      <!-- Card 2: Interactive Playground -->
+      <div class="card-mode" onclick="goTo('mode2')">
+        <span class="icon">🧪</span>
+        <h3 class="fh xl c-cyan mb2">المختبر التفاعلي المفتوح</h3>
+        <p class="c-grey sm" style="margin-bottom:16px">التجريب الحي — Playground</p>
+        <div class="flex flex-wrap justify-center gap2" style="margin-bottom:16px">
+          <span class="chip c-cyan">محرك AI حي</span>
+          <span class="chip c-mint">مدخلات ديناميكية</span>
+        </div>
+        <p class="c-grey xs" style="line-height:1.6">
+          حدّد حالة كل طرف (سليم/حامل) وشغّل محرك التحليل الجيني الذكي لحساب النتيجة فوراً — تجربة تفاعلية حقيقية بمنطق وراثي دقيق.
+        </p>
+        <button class="btn btn-cyan btn-xl mt4" style="background:linear-gradient(135deg,#22D3EE,#0891A7);color:#fff">افتح المختبر التفاعلي ←</button>
+      </div>
+    </div>
+
+    <div class="tc mt5">
+      <p class="c-grey xs">ARKANE AI · منصّة دعم القرار الوراثي قبل الزواج</p>
+    </div>
+  </div>
+</div>
 
 
 <!-- ═══════════════════════════════════════════════════════════
-     SCREEN 1: Landing + Two-Way Consent Lock
+     MODE 1: GUIDED SCENARIOS — 3 Preset Scenarios
      ═══════════════════════════════════════════════════════════ -->
-<div class="screen active" id="s1">
-  <div class="container" style="display:flex;flex-direction:column;justify-content:center;min-height:100vh">
+<div class="screen" id="mode1">
+  <div class="container" style="padding-top:32px;padding-bottom:40px">
 
-    <div class="text-center" style="margin-bottom:40px">
-      <p class="kicker text-teal text-xs" style="margin-bottom:20px">منصّة دعم القرار الوراثي قبل الزواج</p>
-      <h1 class="font-head text-3xl leading-tight" style="margin-bottom:8px">وَراثة</h1>
-      <p class="text-teal text-xl font-bold" style="letter-spacing:.4em;margin-bottom:28px">WIRATHA</p>
-      <div class="hairline" style="max-width:120px;margin:0 auto 28px"></div>
-      <p class="text-greyx text-lg" style="max-width:420px;margin:0 auto">
-        نحوّل نتيجة الفحص من <span class="text-coral">رقمٍ مُخيف</span> إلى <span class="text-teal">قرارٍ واعٍ ومفهوم</span>
-      </p>
+    <button class="back-btn" onclick="goTo('gw')">← العودة للبوابة الرئيسية</button>
+
+    <div class="tc mb4">
+      <p class="kicker c-mint xs mb2">SIMULATED SCENARIOS</p>
+      <h2 class="fh x2">السيناريوهات الموجهة</h2>
+      <p class="c-grey sm mt2">ثلاث حالات واقعية لاستعراض قدرات المنصّة</p>
+    </div>
+
+    <!-- Scenario Tabs -->
+    <div class="stabs">
+      <button class="stab on" id="tA" onclick="showSc('A')">⚠️ الخطر الحرج</button>
+      <button class="stab" id="tB" onclick="showSc('B')">🧬 تداخل وراثي</button>
+      <button class="stab" id="tC" onclick="showSc('C')">✅ توافق آمن</button>
+    </div>
+
+    <!-- ═─ Scenario A: Critical Risk ─═ -->
+    <div class="sc-body on" id="scA">
+      <div class="card card-coral mb4">
+        <div class="flex items-center gap3 mb3">
+          <span style="font-size:2rem">⚠️</span>
+          <div>
+            <h3 class="fh lg c-coral">سيناريو الخطر الحرج والترجمة الإنسانية</h3>
+            <p class="c-grey xs mt1">كلا الطرفين حامل لمرض فقر الدم المنجلي (HBB) · طفرة autosomal-recessive</p>
+          </div>
+        </div>
+
+        <!-- Consent Lock -->
+        <div id="cA" style="display:block">
+          <p class="sm mb3">🔒 <span class="bold">قفل الموافقة الثنائية:</span> اضغط زري الدخول لتفعيل المحاكاة.</p>
+          <div class="g2 mb3">
+            <button class="btn btn-teal" id="cA1" onclick="scConsent('A','1')" style="width:100%">🔑 دخول الخاطب</button>
+            <button class="btn btn-coral" id="cA2" onclick="scConsent('A','2')" style="width:100%">🔑 دخول المخطوبة</button>
+          </div>
+          <div class="alert alert-gold" id="wA"><span>⏳</span><span>بانتظار موافقة الطرف الآخر...</span></div>
+          <div class="alert alert-mint" id="oA"><span>✓</span><span>اكتملت الموافقة — جاري فك القفل</span></div>
+        </div>
+
+        <!-- Results -->
+        <div id="rA" style="display:none">
+          <div class="tc mb4">
+            <div class="gauge-wrap mt4 mb3">
+              <svg class="gauge-svg" viewBox="0 0 200 200">
+                <circle class="gauge-bg" cx="100" cy="100" r="82"/>
+                <circle class="gauge-fill" id="gA" cx="100" cy="100" r="82" stroke="url(#gAgrd)" stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
+                <defs><linearGradient id="gAgrd"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#F4B860"/></linearGradient></defs>
+              </svg>
+              <div class="gauge-ctr">
+                <span class="gauge-val c-coral" id="gAv">0%</span>
+                <span class="gauge-lbl">احتمال إصابة الطفل</span>
+              </div>
+            </div>
+
+            <div class="mxw" style="margin-bottom:20px">
+              <div class="prow"><span class="prow-lbl c-coral">مصاب</span><div class="prow-trk"><div class="prow-fil" id="bA1" style="width:0%;background:linear-gradient(90deg,#FF6B6B,#E05757)"></div></div><span class="xs" style="width:36px">25%</span></div>
+              <div class="prow"><span class="prow-lbl c-gold">حامل</span><div class="prow-trk"><div class="prow-fil" id="bA2" style="width:0%;background:linear-gradient(90deg,#F4B860,#C9A227)"></div></div><span class="xs" style="width:36px">50%</span></div>
+              <div class="prow"><span class="prow-lbl c-mint">سليم</span><div class="prow-trk"><div class="prow-fil" id="bA3" style="width:0%;background:linear-gradient(90deg,#34D399,#0E9F6E)"></div></div><span class="xs" style="width:36px">25%</span></div>
+            </div>
+          </div>
+
+          <!-- Empathy Translation -->
+          <div class="card card-cyan mb4">
+            <h4 class="fh c-cyan mb3">💬 الترجمة الإنسانية</h4>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div><p class="bold c-mint sm mb1">ما هو "الحامل"؟</p><p class="c-grey xs" style="line-height:1.7">الشخص يحمل نسخة واحدة من الطفرة لكنه <span class="bold c-mint">سليم تماماً ولا يعاني</span>. لا أعراض، لا علاج — فقط عند زواج حاملَين لنفس الطفرة يصبح هناك احتمال 25% لكل حمل.</p></div>
+              <div style="height:1px;background:rgba(255,255,255,.08)"></div>
+              <div><p class="bold c-coral sm mb1">ما الفرق عن "المصاب"؟</p><p class="c-grey xs" style="line-height:1.7">"المصاب" يعني نسختان من الطفرة — هنا تظهر الأعراض (نوبات ألم، دخول طوارئ، نقل دم). <span class="bold c-teal">أنتما حاملان، لستما مصابين</span> — والفرق جوهري في القرار.</p></div>
+              <div style="height:1px;background:rgba(255,255,255,.08)"></div>
+              <div><p class="bold c-teal sm mb1">المعنى العملي</p><p class="c-grey xs" style="line-height:1.7">كل حمل: <span class="c-mint bold">25% سليم</span> · <span class="c-gold bold">50% حامل مثلكما</span> · <span class="c-coral bold">25% مصاب</span>. المعرفة تمكّنكما من خيارات وقائية حقيقية.</p></div>
+            </div>
+          </div>
+
+          <!-- Options -->
+          <h4 class="fh mb3">👣 الخيارات الإنجابية المتاحة</h4>
+          <div class="g2 mb4">
+            <div class="card card-mint"><span style="font-size:2rem">🧬</span><h5 class="fh c-mint mt2 mb1">PGT-M</h5><p class="c-grey xs" style="line-height:1.7">فحص الأجنة ما قبل الزرع في المختبر للتأكد من خلوها من الطفرة — يضمن حملاً سليماً.</p><button class="btn btn-outline mt3" style="width:100%;font-size:.8rem" onclick="this.textContent='✓ تم العرض';this.classList.add('btn-pressed')">عرض التفاصيل</button></div>
+            <div class="card card-cyan"><span style="font-size:2rem">🏥</span><h5 class="fh c-cyan mt2 mb1">الصحة الافتراضي</h5><p class="c-grey xs" style="line-height:1.7">حجز موعد فوري مع استشاري وراثة عن بُعد — ملفكم مُجهَّز مسبقاً.</p><button class="btn btn-teal mt3" style="width:100%;font-size:.8rem" onclick="this.textContent='✓ تم الحجز';this.classList.add('btn-pressed')">📅 حجز موعد</button></div>
+          </div>
+
+          <!-- ROI -->
+          <div class="card card-gold tc">
+            <h4 class="fh c-gold mb3">📊 الأثر المالي الوقائي</h4>
+            <div class="g2">
+              <div><span class="cntr c-mint" id="rA1">0</span><p class="c-grey xs mt1">طفل محمي من المعاناة</p></div>
+              <div><span class="cntr c-gold" id="rA2" style="font-size:1.6rem">0</span><p class="c-grey xs mt1">ريال توفير تقديري</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═─ Scenario B: Cousin Marriage Overlap ─═ -->
+    <div class="sc-body" id="scB">
+      <div class="card mb4">
+        <div class="flex items-center gap3 mb3">
+          <span style="font-size:2rem">🧬</span>
+          <div>
+            <h3 class="fh lg c-gold">سيناريو التداخل الوراثي وزواج الأقارب</h3>
+            <p class="c-grey xs mt1">زواج أقارب من الدرجة الأولى · مخاطر متعددة متداخلة</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap2 mb3">
+          <span class="chip c-coral">57% زواج أقارب</span>
+          <span class="chip c-gold">تداخل متعدد</span>
+          <span class="chip c-cyan">أثر وطني</span>
+        </div>
+
+        <div id="cB" style="display:block">
+          <p class="sm mb3">🔒 اضغط زري الدخول لتفعيل محاكاة التداخل الوراثي.</p>
+          <div class="g2 mb3">
+            <button class="btn btn-teal" id="cB1" onclick="scConsent('B','1')" style="width:100%">🔑 دخول الخاطب</button>
+            <button class="btn btn-coral" id="cB2" onclick="scConsent('B','2')" style="width:100%">🔑 دخول المخطوبة</button>
+          </div>
+          <div class="alert alert-gold" id="wB"><span>⏳</span><span>بانتظار موافقة الطرف الآخر...</span></div>
+          <div class="alert alert-mint" id="oB"><span>✓</span><span>اكتملت الموافقة — جاري التحليل</span></div>
+        </div>
+
+        <div id="rB" style="display:none">
+          <!-- Multi-risk display -->
+          <div class="card card-coral mb4">
+            <h4 class="fh c-coral mb3">⚠️ نتائج التحليل — تداخل وراثي معقد</h4>
+            <p class="c-grey sm mb3" style="line-height:1.7">الفحص يكشف <span class="bold c-coral">طفرات متعددة متداخلة</span> نتيجة القرابة العائلية. زواج الأقارب يرفع احتمالية تطابق الطفرات بشكل كبير.</p>
+            <div class="mxw">
+              <div class="prow"><span class="prow-lbl c-coral">فقر دم منجلي</span><div class="prow-trk"><div class="prow-fil" style="width:85%;background:linear-gradient(90deg,#FF6B6B,#E05757)"></div></div><span class="xs" style="width:50px">25% خطر</span></div>
+              <div class="prow"><span class="prow-lbl c-gold">تثبيط المناعة</span><div class="prow-trk"><div class="prow-fil" style="width:60%;background:linear-gradient(90deg,#F4B860,#C9A227)"></div></div><span class="xs" style="width:50px">15% خطر</span></div>
+              <div class="prow"><span class="prow-lbl c-teal">عوز إنزيمي</span><div class="prow-trk"><div class="prow-fil" style="width:40%;background:linear-gradient(90deg,#0FB5A8,#0A7D74)"></div></div><span class="xs" style="width:50px">10% خطر</span></div>
+            </div>
+          </div>
+
+          <!-- National impact -->
+          <div class="card card-gold mb4">
+            <h4 class="fh c-gold mb3 tc">📈 الأثر الاقتصادي الوقائي الوطني</h4>
+            <p class="c-grey xs tc mb3">زواج الأقارب في السعودية يصل إلى <span class="bold c-coral">57%</span>. كل حالة وقاية توفّر ملايين الريالات.</p>
+            <div class="g2 tc">
+              <div class="card" style="background:rgba(0,0,0,.15)"><span class="cntr c-coral" style="font-size:1.8rem">57%</span><p class="c-grey xs mt1">زواج الأقارب</p></div>
+              <div class="card" style="background:rgba(0,0,0,.15)"><span class="cntr c-gold" id="rB1" style="font-size:1.8rem">0</span><p class="c-grey xs mt1">ريال توفير/حالة</p></div>
+              <div class="card" style="background:rgba(0,0,0,.15)"><span class="cntr c-mint" style="font-size:1.8rem">~250K</span><p class="c-grey xs mt1">عقد زواج/سنة</p></div>
+              <div class="card" style="background:rgba(0,0,0,.15)"><span class="cntr c-teal" id="rB2" style="font-size:1.8rem">0</span><p class="c-grey xs mt1">وفورات وطنية</p></div>
+            </div>
+          </div>
+
+          <!-- Options -->
+          <h4 class="fh mb3">👣 الخيارات المتاحة</h4>
+          <div class="g2 mb3">
+            <div class="card card-cyan"><span style="font-size:2rem">🔬</span><h5 class="fh c-cyan mt2 mb1">فحص جينوم شامل</h5><p class="c-grey xs" style="line-height:1.7">يكشف 300+ مرض وراثي بدلاً من مرضين فقط — صورة كاملة.</p><button class="btn btn-outline mt3" style="width:100%;font-size:.8rem" onclick="this.textContent='✓ تم العرض';this.classList.add('btn-pressed')">عرض التفاصيل</button></div>
+            <div class="card card-mint"><span style="font-size:2rem">🏥</span><h5 class="fh c-mint mt2 mb1">استشارة وراثية متخصصة</h5><p class="c-grey xs" style="line-height:1.7">حجز موعد فوري مع فريق استشاري متخصص في الأمراض الوراثية المتداخلة.</p><button class="btn btn-teal mt3" style="width:100%;font-size:.8rem" onclick="this.textContent='✓ تم الحجز';this.classList.add('btn-pressed')">📅 حجز موعد</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═─ Scenario C: Safe Compatibility ─═ -->
+    <div class="sc-body" id="scC">
+      <div class="card card-green mb4">
+        <div class="flex items-center gap3 mb3">
+          <span style="font-size:2rem">✅</span>
+          <div>
+            <h3 class="fh lg c-mint">سيناريو التوافق الآمن</h3>
+            <p class="c-grey xs mt1">لا طفرات متطابقة · توافق وراثي تام</p>
+          </div>
+        </div>
+
+        <div id="cC" style="display:block">
+          <p class="sm mb3">🔒 اضغط زري الدخول لإصدار شهادة التوافق المحاكاة.</p>
+          <div class="g2 mb3">
+            <button class="btn btn-teal" id="cC1" onclick="scConsent('C','1')" style="width:100%">🔑 دخول الخاطب</button>
+            <button class="btn btn-coral" id="cC2" onclick="scConsent('C','2')" style="width:100%">🔑 دخول المخطوبة</button>
+          </div>
+          <div class="alert alert-gold" id="wC"><span>⏳</span><span>بانتظار موافقة الطرف الآخر...</span></div>
+          <div class="alert alert-mint" id="oC"><span>✓</span><span>اكتملت الموافقة — جاري إصدار الشهادة</span></div>
+        </div>
+
+        <div id="rC" style="display:none">
+          <!-- Certificate -->
+          <div class="cert mb4">
+            <span class="cert-stamp">✓</span>
+            <span style="font-size:3rem">💚</span>
+            <h3 class="fh x2 c-mint mt3 mb2">التوافق الوراثي الآمن</h3>
+            <p class="c-grey sm mb3">الفحص يؤكد عدم وجود تطابق وراثي خطير بين الطرفين.</p>
+            <div class="g2 tc mb3">
+              <div><span class="cntr c-mint">0%</span><p class="c-grey xs mt1">خطر إصابة الأطفال</p></div>
+              <div><span class="cntr c-teal">100%</span><p class="c-grey xs mt1">توافق آمن</p></div>
+            </div>
+            <div class="card card-mint" style="margin-bottom:16px">
+              <p class="c-mint sm bold mb1">📋 ملخص النتيجة</p>
+              <p class="c-grey xs" style="line-height:1.7">كلا الطرفين يحمل طفرات مختلفة غير متطابقة، أو أحدهما/كلاهما سليم. لا يوجد خطر على الأطفال من الأمراض الوراثية المفحوصة.</p>
+            </div>
+            <button class="btn btn-mint btn-xl" onclick="this.textContent='✓ تمت المطابقة مع صحتي';this.classList.add('btn-pressed')">🔗 ربط مع منصة صحتي</button>
+          </div>
+
+          <!-- Happy message -->
+          <div class="card card-mint tc">
+            <span style="font-size:2.5rem">🎉</span>
+            <h4 class="fh c-mint mt2 mb2">تهانيناً!</h4>
+            <p class="c-grey sm" style="line-height:1.7">النتيجة تبعث على الطمأنينة. يمكنكم متابعة إجراءات الزواج بثقة. نوصي دائماً بـ <span class="bold c-teal">الاستشارة الطبية الوقائية</span> حتى مع النتائج الآمنة.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODE 2: INTERACTIVE PLAYGROUND — Live Genetic Calculator
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="mode2">
+  <div class="container" style="padding-top:32px;padding-bottom:40px">
+
+    <button class="back-btn" onclick="goTo('gw')">← العودة للبوابة الرئيسية</button>
+
+    <div class="tc mb4">
+      <p class="kicker c-cyan xs mb2">INTERACTIVE PLAYGROUND</p>
+      <h2 class="fh x2">المختبر التفاعلي المفتوح</h2>
+      <p class="c-grey sm mt2">حدّد حالة الطرفين وشغّل المحرك — حساب فوري</p>
     </div>
 
     <!-- Step indicator -->
-    <div class="steps" style="max-width:300px;margin:0 auto 32px">
-      <div class="step-dot active"></div>
-      <div class="step-line"></div>
-      <div class="step-dot"></div>
-      <div class="step-line"></div>
-      <div class="step-dot"></div>
-    </div>
+    <div class="steps"><div class="sdot on"></div><div class="sline"></div><div class="sdot" id="m2d2"></div><div class="sline"></div><div class="sdot" id="m2d3"></div></div>
 
-    <div class="card" style="margin-bottom:20px">
-      <h2 class="font-head text-xl" style="margin-bottom:8px">🔒 بوابة الموافقة الثنائية</h2>
-      <p class="text-greyx text-sm leading-relaxed" style="margin-bottom:20px">
-        التقرير الوراثي المشترك <span class="text-coral font-bold">لا يُفكّ تشفيره</span> إلا بموافقة كلا الطرفين معاً.
-        اضغط زر الدخول للمحاكاة.
-      </p>
+    <!-- Input Panel -->
+    <div class="card mb4" id="m2input">
+      <h3 class="fh mb4">🎛️ عناصر التحكم الجينية</h3>
 
-      <div class="btn-group" style="max-width:400px;margin:0 auto">
-        <button class="btn btn-teal" id="btnP1" onclick="consent('p1')" style="width:100%">
-          🔑 دخول الطرف الأول <span class="text-xs" style="opacity:.8">(الخاطب)</span>
-        </button>
-        <button class="btn btn-coral" id="btnP2" onclick="consent('p2')" style="width:100%">
-          🔑 دخول الطرف الثاني <span class="text-xs" style="opacity:.8">(المخطوبة)</span>
-        </button>
-      </div>
-
-      <div class="alert alert-warn" id="warnAlert">
-        <span style="font-size:1.2rem">⏳</span>
-        <span>بانتظار موافقة الطرف الآخر لسحب البيانات بأمان...</span>
-      </div>
-      <div class="alert alert-success" id="okAlert">
-        <span style="font-size:1.2rem">✓</span>
-        <span>اكتملت الموافقة الثنائية — جاري فك القفل الأمني</span>
-      </div>
-    </div>
-
-    <p class="text-center text-xs text-greyx" style="margin-top:12px">
-      لا يُسمح بالإدخال اليدوي — سحب البيانات آلي من المصدر الرسمي
-    </p>
-  </div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN 2: Data Pull Loading
-     ═══════════════════════════════════════════════════════════ -->
-<div class="screen" id="s2">
-  <div class="container" style="display:flex;flex-direction:column;justify-content:center;min-height:100vh;text-align:center">
-    <div class="spinner-wrap">
-      <div class="spinner"></div>
-      <h2 class="font-head text-xl" style="margin-bottom:8px">جاري سحب البيانات آلياً...</h2>
-      <p class="text-greyx text-sm">من وزارة الصحة · قناة FHIR R4 · TLS 1.3</p>
-      <div class="spinner-dots"><span></span><span></span><span></span></div>
-    </div>
-    <div class="card card-cyan text-center" style="margin-top:20px">
-      <p class="text-sm text-cyan">
-        <span class="font-bold">الحالة المحاكاة:</span> كلا الطرفين حامل لطفرة HBB (فقر الدم المنجلي)<br>
-        الربط عبر نفاذ · التوقيع رقمي مُتحقق ✓
-      </p>
-    </div>
-  </div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN 3: AI Risk Engine + Empathy Translation
-     ═══════════════════════════════════════════════════════════ -->
-<div class="screen" id="s3">
-  <div class="container" style="padding-top:40px;padding-bottom:40px">
-
-    <!-- Header -->
-    <div class="text-center" style="margin-bottom:32px">
-      <p class="kicker text-cyan text-xs" style="margin-bottom:12px">AI EMPATHY ENGINE · نتيجة التحليل</p>
-      <h2 class="font-head text-2xl">تقرير دعم القرار الوراثي المشترك</h2>
-    </div>
-
-    <!-- Step dots -->
-    <div class="steps" style="max-width:300px;margin:0 auto 28px">
-      <div class="step-dot active"></div>
-      <div class="step-line"></div>
-      <div class="step-dot active"></div>
-      <div class="step-line"></div>
-      <div class="step-dot active"></div>
-    </div>
-
-    <!-- Risk Gauge -->
-    <div class="card" style="margin-bottom:24px;text-align:center">
-      <p class="text-greyx text-sm" style="margin-bottom:20px">احتمال إصابة الأطفال — حالة محاكاة تعليمية</p>
-      <div class="gauge-wrap">
-        <svg class="gauge-svg" viewBox="0 0 200 200">
-          <circle class="gauge-bg" cx="100" cy="100" r="80"/>
-          <circle class="gauge-fill" id="gaugeArc" cx="100" cy="100" r="80" stroke="url(#gradGauge)" stroke-dasharray="502.65" stroke-dashoffset="502.65"/>
-          <defs><linearGradient id="gradGauge"><stop offset="0%" stop-color="#0FB5A8"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
-        </svg>
-        <div class="gauge-center">
-          <span class="gauge-value" id="gaugeVal">0%</span>
-          <span class="gauge-label">احتمال الإصابة</span>
+      <div class="g2">
+        <div class="frow">
+          <label>حالة الزوج (الخاطب)</label>
+          <select id="hState">
+            <option value="">اختر الحالة الوراثية...</option>
+            <option value="healthy">🟩 سليم تماماً (AA)</option>
+            <option value="carrier">🟨 حامل لصفة وراثية (Aa)</option>
+          </select>
+        </div>
+        <div class="frow">
+          <label>حالة الزوجة (المخطوبة)</label>
+          <select id="wState">
+            <option value="">اختر الحالة الوراثية...</option>
+            <option value="healthy">🟩 سليمة تماماً (AA)</option>
+            <option value="carrier">🟨 حاملة لصفة وراثية (Aa)</option>
+          </select>
         </div>
       </div>
 
-      <!-- Bars -->
-      <div style="max-width:400px;margin:24px auto 0">
-        <div class="progress-row">
-          <span class="progress-label">مصاب 🟥</span>
-          <div class="progress-track"><div class="progress-fill" id="barSick" style="width:0%;background:linear-gradient(90deg,#FF6B6B,#E05757)"></div></div>
-          <span class="text-xs" style="width:40px;text-align:left">25%</span>
-        </div>
-        <div class="progress-row">
-          <span class="progress-label">حامل 🟨</span>
-          <div class="progress-track"><div class="progress-fill" id="barCar" style="width:0%;background:linear-gradient(90deg,#F4B860,#C9A227)"></div></div>
-          <span class="text-xs" style="width:40px;text-align:left">50%</span>
-        </div>
-        <div class="progress-row">
-          <span class="progress-label">سليم 🟩</span>
-          <div class="progress-track"><div class="progress-fill" id="barSafe" style="width:0%;background:linear-gradient(90deg,#34D399,#0E9F6E)"></div></div>
-          <span class="text-xs" style="width:40px;text-align:left">25%</span>
-        </div>
+      <!-- Consent -->
+      <div class="hl" style="margin:20px 0"></div>
+      <p class="sm mb3">🔒 <span class="bold">قفل الموافقة الثنائية</span> — مُتطلب قانوني (PDPL)</p>
+      <div class="g2 mb3">
+        <button class="btn btn-teal" id="m21" onclick="m2Consent('1')" style="width:100%">🔑 دخول الخاطب</button>
+        <button class="btn btn-coral" id="m22" onclick="m2Consent('2')" style="width:100%">🔑 دخول المخطوبة</button>
       </div>
-    </div>
+      <div class="alert alert-gold" id="m2w"><span>⏳</span><span>بانتظار موافقة الطرف الآخر لسحب البيانات...</span></div>
+      <div class="alert alert-mint" id="m2o"><span>✓</span><span>اكتملت الموافقة — يمكن تشغيل المحرك</span></div>
 
-    <!-- Empathy Translation -->
-    <div class="card card-cyan" style="margin-bottom:24px">
-      <h3 class="font-head text-lg text-cyan" style="margin-bottom:12px">💬 الترجمة الإنسانية — ما تعنيه النتيجة</h3>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div>
-          <p class="font-bold text-mint" style="margin-bottom:4px">ما هو "الحامل"؟</p>
-          <p class="text-sm text-greyx leading-relaxed">
-            يعني أن الشخص يحمل نسخة واحدة من الطفرة الوراثية، لكنه <span class="text-mint font-bold">سليم تماماً ولا يعاني من المرض</span>.
-            لا أعراض، لا علاج، لا قلق على صحته — فقط عند تزاوج حاملَين لنفس الطفرة يصبح هناك احتمال 25% لكل حمل.
-          </p>
-        </div>
-        <hr>
-        <div>
-          <p class="font-bold text-coral" style="margin-bottom:4px">ما الفرق عن "المصاب"؟</p>
-          <p class="text-sm text-greyx leading-relaxed">
-            "المصاب" يعني نسختان من الطفرة — هنا تظهر الأعراض فعلياً (نوبات ألم، دخول طوارئ، نقل دم).
-            <span class="text-teal font-bold">أنتما حاملان، لستما مصابين</span> — والفرق جوهري جداً في القرار.
-          </p>
-        </div>
-        <hr>
-        <div>
-          <p class="font-bold text-teal" style="margin-bottom:4px">المعنى العملي لقراركما</p>
-          <p class="text-sm text-greyx leading-relaxed">
-            كل حمل مستقبلي: <span class="text-mint font-bold">25% سليم تماماً</span>،
-            <span class="text-gold font-bold">50% حامل مثلكما</span>،
-            <span class="text-coral font-bold">25% مصاب</span>.
-            المعرفة تمكّنكما من خيارات وقائية حقيقية — ليست نهاية، بل بداية قرار واعٍ.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="text-center" style="margin-bottom:20px">
-      <button class="btn btn-gold" onclick="goTo('s4')" style="width:100%;max-width:400px">
-        👣 استعرض خياراتكما الإنجابية →
+      <!-- Run Button -->
+      <button class="btn btn-purple btn-huge mt4" id="runBtn" onclick="runEngine()" style="display:none;background:linear-gradient(135deg,#8B7FE8,#6B5FC7)">
+        ⚡ تشغيل محرك التحليل الجيني الذكي
       </button>
     </div>
 
-    <p class="text-center text-xs text-greyx">التحليل استرشادي تحت إشرافٍ طبي · لا يُلزم بقرار</p>
-  </div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN 4: Actionable Paths (Options)
-     ═══════════════════════════════════════════════════════════ -->
-<div class="screen" id="s4">
-  <div class="container" style="padding-top:40px;padding-bottom:40px">
-
-    <div class="text-center" style="margin-bottom:32px">
-      <p class="kicker text-mint text-xs" style="margin-bottom:12px">ACTIONABLE PATHS · خياراتكم</p>
-      <h2 class="font-head text-2xl">شجرة الخيارات الإنجابية المتاحة</h2>
-      <p class="text-greyx text-sm" style="margin-top:10px">
-        بناءً على النتيجة، هذه الخيارات الواقعية التي يمكنكما اتخاذها بمشورة طبية متخصصة
-      </p>
+    <!-- Loading -->
+    <div class="card tc" id="m2load" style="display:none;padding:48px 24px">
+      <div class="spin"></div>
+      <h3 class="fh mb2">جاري التحليل...</h3>
+      <p class="c-grey sm">محرك AI يحسب الاحتمالات الوراثية بالضبط</p>
     </div>
 
-    <div class="options-grid" style="margin-bottom:28px">
+    <!-- Results -->
+    <div id="m2res" style="display:none">
+      <!-- Gauge + Stats -->
+      <div class="card mb4">
+        <h3 class="fh tc mb4" id="resTitle">🔬 نتيجة التحليل الجيني</h3>
+        <div class="tc">
+          <div class="gauge-wrap mb3">
+            <svg class="gauge-svg" viewBox="0 0 200 200">
+              <circle class="gauge-bg" cx="100" cy="100" r="82"/>
+              <circle class="gauge-fill" id="m2g" cx="100" cy="100" r="82" stroke="url(#m2grd)" stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
+              <defs><linearGradient id="m2grd"><stop offset="0%" stop-color="#0FB5A8"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+            </svg>
+            <div class="gauge-ctr">
+              <span class="gauge-val c-teal" id="m2gv">0%</span>
+              <span class="gauge-lbl" id="m2gl">احتمال الإصابة</span>
+            </div>
+          </div>
 
-      <!-- Option 1: PGT-M -->
-      <div class="card card-mint" style="position:relative">
-        <div style="font-size:2.5rem;margin-bottom:12px">🧬</div>
-        <h3 class="font-head text-lg text-mint" style="margin-bottom:8px">PGT-M</h3>
-        <p class="font-bold text-sm" style="margin-bottom:8px">فحص الأجنة ما قبل الزرع</p>
-        <p class="text-greyx text-sm leading-relaxed" style="margin-bottom:16px">
-          فحص الأجنة في المختبر قبل إعادتها للرحم للتأكد من خلوها من الطفرة — يضمن حملاً سليماً بأذن الله.
-          يُنصح به للأزواج الحاملين لنفس الطفرة.
-        </p>
-        <button class="btn btn-outline" style="width:100%;font-size:.85rem" onclick="this.textContent='✓ تم عرض التفاصيل';this.classList.add('btn-pressed')">
-          عرض تفاصيل الإجراء
-        </button>
-      </div>
-
-      <!-- Option 2: Virtual Hospital -->
-      <div class="card card-cyan" style="position:relative">
-        <div style="font-size:2.5rem;margin-bottom:12px">🏥</div>
-        <h3 class="font-head text-lg text-cyan" style="margin-bottom:8px">الصحة الافتراضي</h3>
-        <p class="font-bold text-sm" style="margin-bottom:8px">استشارة وراثية عن بُعد</p>
-        <p class="text-greyx text-sm leading-relaxed" style="margin-bottom:16px">
-          حجز موعد فوري مع مستشفى الصحة الافتراضي للاستشارة الوراثية المتخصصة.
-          ملفكم مُجهَّز مسبقاً — اضغطوا للربط المباشر.
-        </p>
-        <button class="btn btn-teal" style="width:100%;font-size:.85rem" onclick="this.textContent='✓ جاري الربط...';this.classList.add('btn-pressed')">
-          📅 حجز موعد استشارة
-        </button>
-      </div>
-
-      <!-- Option 3: Re-test -->
-      <div class="card" style="position:relative">
-        <div style="font-size:2.5rem;margin-bottom:12px">🔬</div>
-        <h3 class="font-head text-lg text-teal" style="margin-bottom:8px">فحص تأكيدي شامل</h3>
-        <p class="font-bold text-sm" style="margin-bottom:8px">توسيع نطاق الفحص</p>
-        <p class="text-greyx text-sm leading-relaxed" style="margin-bottom:16px">
-          الفحص الحكومي يغطّي مرضين فقط. يمكنكم إجراء فحص جينوم شامل يكشف 300+ مرض وراثي
-          للحصول على صورة كاملة قبل القرار.
-        </p>
-        <button class="btn btn-outline" style="width:100%;font-size:.85rem" onclick="this.textContent='✓ تم عرض المعلومات';this.classList.add('btn-pressed')">
-          عرض تفاصيل الفحص الشامل
-        </button>
-      </div>
-
-      <!-- Option 4: Support Group -->
-      <div class="card card-gold" style="position:relative">
-        <div style="font-size:2.5rem;margin-bottom:12px">💚</div>
-        <h3 class="font-head text-lg text-gold" style="margin-bottom:8px">دعم نفسي وزوجي</h3>
-        <p class="font-bold text-sm" style="margin-bottom:8px">جلسات مرافقة للقرار</p>
-        <p class="text-greyx text-sm leading-relaxed" style="margin-bottom:16px">
-          جلسات دعم نفسي متخصصة للأزواج المقبلين على الزواج لمساعدتكما على استيعاب
-          النتيجة واتخاذ قرارٍ هادئ ومشترك بعيداً عن الضغط.
-        </p>
-        <button class="btn btn-outline" style="width:100%;font-size:.85rem" onclick="this.textContent='✓ تم عرض الخيارات';this.classList.add('btn-pressed')">
-          عرض خيارات الدعم
-        </button>
-      </div>
-    </div>
-
-    <!-- Info box -->
-    <div class="card card-cyan" style="margin-bottom:28px;text-align:center">
-      <p class="text-cyan text-sm">
-        <span class="font-bold">تذكير مهم:</span> هذه النتيجة <span class="font-bold">استرشادية</span> تحت إشراف طبي.
-        لا تُعتمد وحدها للقرار — استشارة الوراثي الطبيب <span class="font-bold">إلزامية</span> قبل أي إجراء.
-      </p>
-    </div>
-
-    <div class="text-center">
-      <button class="btn btn-gold" onclick="goTo('s5')" style="width:100%;max-width:400px">
-        📊 اطلع على الأثر المالي والإنساني →
-      </button>
-    </div>
-  </div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN 5: ROI Dashboard
-     ═══════════════════════════════════════════════════════════ -->
-<div class="screen" id="s5">
-  <div class="container" style="padding-top:40px;padding-bottom:40px">
-
-    <div class="text-center" style="margin-bottom:32px">
-      <p class="kicker text-gold text-xs" style="margin-bottom:12px">ROI DASHBOARD · الأثر</p>
-      <h2 class="font-head text-2xl">لوحة الأثر المالي والإنساني</h2>
-      <p class="text-greyx text-sm" style="margin-top:10px">
-        كل قرارٍ واعٍ يُنقذ طفلاً من المعاناة ويوفّر ملايين الريالات
-      </p>
-    </div>
-
-    <!-- Counters -->
-    <div class="options-grid" style="margin-bottom:28px">
-
-      <!-- Human Impact -->
-      <div class="card card-mint text-center" style="padding:32px 24px">
-        <div style="font-size:3rem;margin-bottom:12px">👶</div>
-        <p class="text-greyx text-sm" style="margin-bottom:8px">الأثر الإنساني لكل حالة مُنِعت</p>
-        <div class="counter-value text-mint" id="cntChild">0</div>
-        <p class="text-sm" style="margin-top:4px;color:var(--mint);opacity:.8">طفل محمي من المعاناة مدى الحياة</p>
-      </div>
-
-      <!-- Financial Impact -->
-      <div class="card card-gold text-center" style="padding:32px 24px">
-        <div style="font-size:3rem;margin-bottom:12px">💰</div>
-        <p class="text-greyx text-sm" style="margin-bottom:8px">العائد المالي الوقائي التقديري</p>
-        <div class="counter-value text-gold" id="cntMoney" style="font-size:2rem">0</div>
-        <p class="text-sm" style="margin-top:4px;color:var(--gold);opacity:.8">ريال سعودي توفير على المدى الطويل</p>
-      </div>
-
-      <!-- Family Impact -->
-      <div class="card text-center" style="padding:32px 24px">
-        <div style="font-size:3rem;margin-bottom:12px">🏠</div>
-        <p class="text-greyx text-sm" style="margin-bottom:8px">أسرة مُجنّبة من الإنهاك النفسي والمادي</p>
-        <div class="counter-value text-teal" id="cntFam">0</div>
-        <p class="text-sm" style="margin-top:4px;color:var(--teal);opacity:.8">أسرة سنوياً تتجنب رحلة علاجٍ لا تنتهي</p>
-      </div>
-
-      <!-- Healthcare -->
-      <div class="card card-coral text-center" style="padding:32px 24px">
-        <div style="font-size:3rem;margin-bottom:12px">🏥</div>
-        <p class="text-greyx text-sm" style="margin-bottom:8px">تخفيف الضغط على القطاع الصحي</p>
-        <div class="counter-value text-coral" id="cntBed">0</div>
-        <p class="text-sm" style="margin-top:4px;color:var(--coral);opacity:.8">سرير/وحدة عناية مركّزة مُحرَّر سنوياً</p>
-      </div>
-    </div>
-
-    <!-- Savings breakdown -->
-    <div class="card" style="margin-bottom:28px">
-      <h3 class="font-head text-lg text-gold" style="margin-bottom:16px">📈 كيف تحسب الوفورات؟</h3>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="flex" style="justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)">
-          <span class="text-sm">كلفة علاج المريض الواحد سنوياً</span>
-          <span class="text-gold font-bold">182,000 ريال</span>
-        </div>
-        <div class="flex" style="justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)">
-          <span class="text-sm">سنوات الرعاية المُقدَّرة</span>
-          <span class="text-gold font-bold">40+ سنة</span>
-        </div>
-        <div class="flex" style="justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)">
-          <span class="text-sm">كلفة الأدوية المتخصصة (Spinraza مثلاً)</span>
-          <span class="text-coral font-bold">3.95 مليون ريال/جرعة</span>
-        </div>
-        <div class="flex" style="justify-content:space-between;align-items:center;padding-top:4px">
-          <span class="font-bold text-mist">كلفة المنع عبر وَراثة</span>
-          <span class="text-mint font-bold">≈ 3,000 ريال فقط</span>
+          <div class="mxw" id="m2bars" style="margin:0 auto 16px">
+            <div class="prow"><span class="prow-lbl" id="m2l1" style="color:var(--coral)">مصاب</span><div class="prow-trk"><div class="prow-fil" id="m2b1" style="width:0%"></div></div><span class="xs" id="m2p1" style="width:40px">0%</span></div>
+            <div class="prow"><span class="prow-lbl" id="m2l2" style="color:var(--gold)">حامل</span><div class="prow-trk"><div class="prow-fil" id="m2b2" style="width:0%"></div></div><span class="xs" id="m2p2" style="width:40px">0%</span></div>
+            <div class="prow"><span class="prow-lbl" id="m2l3" style="color:var(--mint)">سليم</span><div class="prow-trk"><div class="prow-fil" id="m2b3" style="width:0%"></div></div><span class="xs" id="m2p3" style="width:40px">0%</span></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Restart -->
-    <div class="text-center" style="margin-bottom:24px">
-      <button class="btn btn-teal" onclick="resetAll()" style="width:100%;max-width:400px">
-        🔄 إعادة التجربة من البداية
-      </button>
+      <!-- Empathy -->
+      <div class="card card-cyan mb4" id="m2emp">
+        <h4 class="fh c-cyan mb3">💬 الترجمة الإنسانية</h4>
+        <div id="m2empBody"></div>
+      </div>
+
+      <!-- Options -->
+      <h4 class="fh mb3" id="m2optTitle">👣 الخيارات المتاحة</h4>
+      <div class="g2 mb4" id="m2opts"></div>
+
+      <!-- ROI -->
+      <div class="card card-gold tc mb4">
+        <h4 class="fh c-gold mb3">📊 الأثر المالي الوقائي</h4>
+        <div class="g2">
+          <div><span class="cntr c-mint" id="m2c1">0</span><p class="c-grey xs mt1">طفل محمي من المعاناة</p></div>
+          <div><span class="cntr c-gold" id="m2c2" style="font-size:1.6rem">0</span><p class="c-grey xs mt1">ريال توفير تقديري</p></div>
+        </div>
+      </div>
+
+      <!-- Restart -->
+      <div class="tc mb4">
+        <button class="btn btn-teal btn-xl" onclick="resetM2()">🔄 تجربة حالة جديدة</button>
+      </div>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="foot" style="position:relative;z-index:2">
-    <div class="hairline" style="max-width:160px;margin:0 auto 20px"></div>
-    <p class="font-head text-lg text-teal" style="margin-bottom:4px">وَراثة · WIRATHA</p>
-    <p class="text-greyx text-sm" style="margin-bottom:16px">منصّة دعم القرار الوراثي · ARKANE AI</p>
-    <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:12px 24px">
-      <span class="text-teal font-bold text-sm">ARKANE AI</span>
-      <span class="text-greyx">·</span>
-      <span class="text-sm">فيصل</span>
-      <span class="text-greyx">·</span>
-      <span dir="ltr" class="text-sm font-bold" style="color:var(--mist)">+966 56 583 3185</span>
+  <footer class="foot">
+    <div class="hl" style="max-width:140px;margin:0 auto 16px"></div>
+    <p class="fh lg c-teal mb1">وَراثة · WIRATHA</p>
+    <p class="c-grey sm mb3">منصّة دعم القرار الوراثي · ARKANE AI</p>
+    <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;padding:10px 22px">
+      <span class="c-teal bold sm">ARKANE AI</span><span class="c-grey">·</span><span class="sm">فيصل</span><span class="c-grey">·</span>
+      <span style="direction:ltr;display:inline-block;font-weight:700;font-size:.9rem">+966 56 583 3185</span>
     </div>
-    <p class="text-xs text-greyx" style="margin-top:16px">النتائج استرشادية · المحاكاة للأغراض التعليمية والتوضيحية</p>
+    <p class="c-grey xs mt3">التحليل استرشادي · المحاكاة للأغراض التعليمية</p>
   </footer>
 </div>
 
 
 <!-- ═══════════════════════════════════════════════════════════
-     JAVASCRIPT ENGINE
+     JAVASCRIPT ENGINE — All Interactive Logic
      ═══════════════════════════════════════════════════════════ -->
 <script>
-/* ─── State ─── */
-let consentP1=false, consentP2=false;
-
-/* ─── Navigation ─── */
+/* ═════════════════════════════════════════════
+   NAVIGATION
+   ═════════════════════════════════════════════ */
 function goTo(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  var el=document.getElementById(id);
+  if(el) el.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
-  if(id==='s3'){setTimeout(initGauge,400)}
-  if(id==='s5'){setTimeout(startCounters,400)}
 }
 
-/* ─── Consent Lock ─── */
-function consent(who){
-  if(who==='p1'){consentP1=true;document.getElementById('btnP1').classList.add('btn-pressed')}
-  if(who==='p2'){consentP2=true;document.getElementById('btnP2').classList.add('btn-pressed')}
+/* ═════════════════════════════════════════════
+   SCENARIO TABS (Mode 1)
+   ═════════════════════════════════════════════ */
+function showSc(id){
+  document.querySelectorAll('.sc-body').forEach(function(b){b.classList.remove('on')});
+  document.querySelectorAll('.stab').forEach(function(t){t.classList.remove('on')});
+  var body=document.getElementById('sc'+id);
+  var tab=document.getElementById('t'+id);
+  if(body) body.classList.add('on');
+  if(tab) tab.classList.add('on');
+}
 
-  const warn=document.getElementById('warnAlert');
-  const ok=document.getElementById('okAlert');
+/* ═════════════════════════════════════════════
+   CONSENT LOCKS
+   ═════════════════════════════════════════════ */
+var cA=false,cB=false,cC=false,m2c1=false,m2c2=false;
 
-  if(consentP1&&consentP2){
-    warn.classList.remove('show');
-    ok.classList.add('show');
-    setTimeout(function(){goTo('s2')},1800);
-    setTimeout(function(){goTo('s3')},3800);
+function scConsent(sc,who){
+  var map={'A':['cA','wA','oA','rA','gA','gAv','bA1','bA2','bA3','rA1','rA2'],
+           'B':['cB','wB','oB','rB','rB1','rB2'],
+           'C':['cC','wC','oC','rC']};
+  var st=map[sc];
+  if(sc==='A') cA=activateConsent(who==='1'?'cA1':'cA2','cA1','cA2',cA,'A',st[0],st[1],st[2],st[3],function(){animGauge('gA',25,'gAv',1200);setBars('bA1','bA2','bA3',25,50,25);cntUp('rA1',1,800);cntMoney('rA2',5000000,1200);});
+  if(sc==='B') cB=activateConsent(who==='1'?'cB1':'cB2','cB1','cB2',cB,'B',st[0],st[1],st[2],st[3],function(){cntMoney('rB1',5000000,1200);cntMoney('rB2',182000,800);});
+  if(sc==='C') cC=activateConsent(who==='1'?'cC1':'cC2','cC1','cC2',cC,'C',st[0],st[1],st[2],st[3],null);
+}
+
+function activateConsent(btnId,btn1,btn2,state,sc,cId,wId,oId,rId,cb){
+  var btn=document.getElementById(btnId);
+  if(btn) btn.classList.add('btn-pressed');
+  var b1=document.getElementById(btn1).classList.contains('btn-pressed');
+  var b2=document.getElementById(btn2).classList.contains('btn-pressed');
+  if(b1&&b2){
+    document.getElementById(wId).classList.remove('show');
+    document.getElementById(oId).classList.add('show');
+    setTimeout(function(){
+      document.getElementById(cId).style.display='none';
+      document.getElementById(rId).style.display='block';
+      if(cb) setTimeout(cb,300);
+    },1200);
+    return true;
   }else{
-    ok.classList.remove('show');
-    warn.classList.add('show');
+    document.getElementById(oId).classList.remove('show');
+    document.getElementById(wId).classList.add('show');
+  }
+  return state;
+}
+
+function m2Consent(who){
+  var btn=document.getElementById('m2'+who);
+  if(btn) btn.classList.add('btn-pressed');
+  if(document.getElementById('m21').classList.contains('btn-pressed')&&document.getElementById('m22').classList.contains('btn-pressed')){
+    document.getElementById('m2w').classList.remove('show');
+    document.getElementById('m2o').classList.add('show');
+    document.getElementById('runBtn').style.display='flex';
+  }else{
+    document.getElementById('m2o').classList.remove('show');
+    document.getElementById('m2w').classList.add('show');
   }
 }
 
-/* ─── Gauge + Bars ─── */
-function initGauge(){
-  // Arc: 25% of 502.65 = ~377 offset
-  const arc=document.getElementById('gaugeArc');
-  if(arc) arc.style.strokeDashoffset='376.99';
-  // Counter
-  countUp('gaugeVal',25,1200,'%');
-  // Bars
+/* ═════════════════════════════════════════════
+   GENETIC CALCULATION ENGINE (Mode 2)
+   ═════════════════════════════════════════════ */
+function runEngine(){
+  var h=document.getElementById('hState').value;
+  var w=document.getElementById('wState').value;
+  if(!h||!w){alert('يرجى اختيار حالة كلا الطرفين أولاً');return;}
+
+  // Show loading
+  document.getElementById('m2input').style.display='none';
+  document.getElementById('m2load').style.display='block';
+  document.getElementById('m2res').style.display='none';
+
+  // Calculate
+  var result=calcGenetics(h,w);
+
   setTimeout(function(){
-    var b1=document.getElementById('barSick');if(b1)b1.style.width='25%';
-    var b2=document.getElementById('barCar');if(b2)b2.style.width='50%';
-    var b3=document.getElementById('barSafe');if(b3)b3.style.width='25%';
-  },200);
+    document.getElementById('m2load').style.display='none';
+    document.getElementById('m2res').style.display='block';
+    document.getElementById('m2d2').classList.add('on');
+    document.getElementById('m2d3').classList.add('on');
+
+    // Update gauge
+    var gVal=result.sick;
+    var gColor=gVal===0?'#0FB5A8':gVal<=15?'#F4B860':'#FF6B6B';
+    var gGrad=gVal===0?'<stop offset="0%" stop-color="#0FB5A8"/><stop offset="100%" stop-color="#34D399"/>':gVal<=15?'<stop offset="0%" stop-color="#F4B860"/><stop offset="100%" stop-color="#C9A227"/>':'<stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#F4B860"/>';
+    var gradEl=document.getElementById('m2grd');
+    if(gradEl) gradEl.innerHTML=gGrad;
+
+    // Animate gauge
+    var arc=document.getElementById('m2g');
+    if(arc){
+      var off=515.22-(gVal/100*515.22);
+      arc.style.strokeDashoffset=off;
+      arc.setAttribute('stroke',gVal===0?'url(#m2grd)':'url(#m2grd)');
+    }
+    countUp('m2gv',gVal,1200,'%');
+
+    // Update bars
+    setBars('m2b1','m2b2','m2b3',result.sick,result.carrier,result.healthy);
+
+    // Color bars
+    var sickColor=gVal===0?'linear-gradient(90deg,#0FB5A8,#34D399)':'linear-gradient(90deg,#FF6B6B,#E05757)';
+    var b1=document.getElementById('m2b1');if(b1)b1.style.background=sickColor;
+
+    // Update labels
+    document.getElementById('m2p1').textContent=result.sick+'%';
+    document.getElementById('m2p2').textContent=result.carrier+'%';
+    document.getElementById('m2p3').textContent=result.healthy+'%';
+
+    // Title
+    var title=document.getElementById('resTitle');
+    if(gVal===0){title.innerHTML='✅ نتيجة: توافق آمن تماماً';title.className='fh tc mb4 c-mint';}
+    else if(gVal<=15){title.innerHTML='⚠️ نتيجة: خطر منخفض إلى متوسط';title.className='fh tc mb4 c-gold';}
+    else{title.innerHTML='🚨 نتيجة: خطر حرج يتطلب استشارة فورية';title.className='fh tc mb4 c-coral';}
+
+    // Empathy text
+    renderEmpathy(h,w,result);
+
+    // Options
+    renderOptions(gVal);
+
+    // ROI
+    if(gVal>0){
+      cntUp('m2c1',1,600);
+      cntMoney('m2c2',5000000,1000);
+    }else{
+      document.getElementById('m2c1').textContent='—';
+      document.getElementById('m2c2').textContent='—';
+    }
+  },1800);
 }
 
-function countUp(elId,target,duration,suffix){
+function calcGenetics(h,w){
+  var sick=0,carrier=0,healthy=0;
+  // Punnett square logic for autosomal recessive
+  if(h==='healthy'&&w==='healthy'){sick=0;carrier=0;healthy=100;}
+  else if(h==='carrier'&&w==='healthy'){sick=0;carrier=50;healthy=50;}
+  else if(h==='healthy'&&w==='carrier'){sick=0;carrier=50;healthy=50;}
+  else if(h==='carrier'&&w==='carrier'){sick=25;carrier=50;healthy=25;}
+  return{sick:sick,carrier:carrier,healthy:healthy};
+}
+
+function renderEmpathy(h,w,r){
+  var html='';
+  if(r.sick===0){
+    if(h==='carrier'||w==='carrier'){
+      html='<div style="display:flex;flex-direction:column;gap:12px">'+
+        '<div><p class="bold c-mint sm mb1">النتيجة مُطمئنة جداً</p><p class="c-grey xs" style="line-height:1.7">أحد الطرفين سليم تماماً (AA)، مما يضمن عدم إصابة أي طفل بالمرض — حتى لو الطرف الآخر حامل. الأولاد قد يكونون <span class="bold c-gold">حاملين بنسبة 50%</span> أو <span class="bold c-mint">سليمين بنسبة 50%</span>، لكنهم لن يصابوا.</p></div>'+
+        '<div style="height:1px;background:rgba(255,255,255,.08)"></div>'+
+        '<div><p class="bold c-gold sm mb1">ملاحظة مهمة</p><p class="c-grey xs" style="line-height:1.7">الأحفاد قد يكون لديهم خطر إذا تزوج حامل من حامل — يُنصح بالفحص الوقائي للأجيال القادمة.</p></div></div>';
+    }else{
+      html='<div style="display:flex;flex-direction:column;gap:12px">'+
+        '<div><p class="bold c-mint sm mb1">🎉 توافق وراثي كامل!</p><p class="c-grey xs" style="line-height:1.7">كلا الطرفين سليمان تماماً من الطفرة. لا يوجد أي خطر وراثي على الأطفال — الحمل سيكون <span class="bold c-mint">100% سليم</span> بالنسبة لهذا المرض المحدد.</p></div></div>';
+    }
+  }else{
+    html='<div style="display:flex;flex-direction:column;gap:12px">'+
+      '<div><p class="bold c-coral sm mb1">⚠️ كلاهما حامل — فهم مهم جداً</p><p class="c-grey xs" style="line-height:1.7">يعني أن كل حمل له <span class="bold c-coral">25% احتمال إصابة</span> — لكن <span class="bold c-mint">75% احتمال سليم أو حامل</span>. الحامل سليم تماماً ولا يعاني، المصاب فقط من يحتاج رعاية.</p></div>'+
+      '<div style="height:1px;background:rgba(255,255,255,.08)"></div>'+
+      '<div><p class="bold c-teal sm mb1">ليست نهاية — بل بداية وعي</p><p class="c-grey xs" style="line-height:1.7">معرفتكما بالوضع تمكّنكما من <span class="bold c-teal">خيارات وقائية حقيقية</span> مثل فحص الأجنة PGT-M أو الاستشارة الوراثية.</p></div></div>';
+  }
+  document.getElementById('m2empBody').innerHTML=html;
+}
+
+function renderOptions(risk){
+  var opts=document.getElementById('m2opts');
+  var title=document.getElementById('m2optTitle');
+  if(risk===0){
+    title.innerHTML='✅ الخيارات الوقائية (اختياري)';
+    opts.innerHTML='<div class="card card-green"><span style="font-size:2rem">📋</span><h5 class="fh c-mint mt2 mb1">متابعة وقائية</h5><p class="c-grey xs" style="line-height:1.7">حتى مع النتيجة الآمنة، يُنصح بمتابعة دورية. يمكن طلب فحص شامل يكشف 300+ مرض.</p><button class="btn btn-outline mt3" style="width:100%;font-size:.8rem" onclick="this.textContent=\'✓ تم العرض\';this.classList.add(\'btn-pressed\')">طلب فحص شامل</button></div>'+
+      '<div class="card card-cyan"><span style="font-size:2rem">🔗</span><h5 class="fh c-cyan mt2 mb1">ربط مع صحتي</h5><p class="c-grey xs" style="line-height:1.7">دمج النتيجة مع ملفك في منصة صحتي للمتابعة المستقبلية.</p><button class="btn btn-teal mt3" style="width:100%;font-size:.8rem" onclick="this.textContent=\'✓ تم الربط\';this.classList.add(\'btn-pressed\')">ربط الحساب</button></div>';
+  }else{
+    title.innerHTML='👣 الخيارات الإنجابية المتاحة';
+    opts.innerHTML='<div class="card card-mint"><span style="font-size:2rem">🧬</span><h5 class="fh c-mint mt2 mb1">PGT-M</h5><p class="c-grey xs" style="line-height:1.7">فحص الأجنة ما قبل الزرع — يضمن حملاً سليماً بنسبة تقترب من 100%.</p><button class="btn btn-outline mt3" style="width:100%;font-size:.8rem" onclick="this.textContent=\'✓ تم العرض\';this.classList.add(\'btn-pressed\')">عرض التفاصيل</button></div>'+
+      '<div class="card card-cyan"><span style="font-size:2rem">🏥</span><h5 class="fh c-cyan mt2 mb1">استشارة وراثية فورية</h5><p class="c-grey xs" style="line-height:1.7">حجز موعد مع استشاري وراثة متخصص — ملفك مُجهَّز مسبقاً.</p><button class="btn btn-teal mt3" style="width:100%;font-size:.8rem" onclick="this.textContent=\'✓ تم الحجز\';this.classList.add(\'btn-pressed\')">📅 حجز موعد</button></div>';
+  }
+}
+
+function resetM2(){
+  m2c1=false;m2c2=false;
+  document.getElementById('hState').value='';
+  document.getElementById('wState').value='';
+  document.getElementById('m21').classList.remove('btn-pressed');
+  document.getElementById('m22').classList.remove('btn-pressed');
+  document.getElementById('m2w').classList.remove('show');
+  document.getElementById('m2o').classList.remove('show');
+  document.getElementById('runBtn').style.display='none';
+  document.getElementById('m2input').style.display='block';
+  document.getElementById('m2load').style.display='none';
+  document.getElementById('m2res').style.display='none';
+  document.getElementById('m2d2').classList.remove('on');
+  document.getElementById('m2d3').classList.remove('on');
+  var arc=document.getElementById('m2g');
+  if(arc) arc.style.strokeDashoffset='515.22';
+  document.getElementById('m2gv').textContent='0%';
+  ['m2b1','m2b2','m2b3'].forEach(function(id){var e=document.getElementById(id);if(e)e.style.width='0%'});
+}
+
+/* ═════════════════════════════════════════════
+   ANIMATIONS
+   ═════════════════════════════════════════════ */
+function setBars(id1,id2,id3,v1,v2,v3){
+  setTimeout(function(){var e=document.getElementById(id1);if(e)e.style.width=v1+'%';},200);
+  setTimeout(function(){var e=document.getElementById(id2);if(e)e.style.width=v2+'%';},400);
+  setTimeout(function(){var e=document.getElementById(id3);if(e)e.style.width=v3+'%';},600);
+}
+
+function animGauge(gId,val,tId,dur){
+  var arc=document.getElementById(gId);
+  if(arc){
+    var off=515.22-(val/100*515.22);
+    setTimeout(function(){arc.style.strokeDashoffset=off;},300);
+  }
+  if(tId) countUp(tId,val,dur||1200,'%');
+}
+
+function countUp(elId,target,dur,suffix){
   suffix=suffix||'';
   var el=document.getElementById(elId);
   if(!el)return;
-  var start=0, step=target/(duration/16), t=0;
+  var t=0,step=target/(dur/16);
   var iv=setInterval(function(){
     t+=step;
     if(t>=target){t=target;clearInterval(iv)}
@@ -600,43 +797,20 @@ function countUp(elId,target,duration,suffix){
   },16);
 }
 
-/* ─── ROI Counters ─── */
-function startCounters(){
-  countUp('cntChild',1,800);
-  countUpMoney('cntMoney',5000000,1500);
-  countUp('cntFam',12,1200);
-  countUp('cntBed',48,1200);
+function cntUp(elId,target,dur){
+  countUp(elId,target,dur||800,'');
 }
 
-function countUpMoney(elId,target,duration){
+function cntMoney(elId,target,dur){
   var el=document.getElementById(elId);
   if(!el)return;
-  var step=target/(duration/16), t=0;
+  var t=0,step=target/(dur/16);
   var iv=setInterval(function(){
     t+=step;
     if(t>=target){t=target;clearInterval(iv)}
-    el.textContent=Math.round(t).toLocaleString('en')+' ريال';
+    el.textContent=Math.round(t).toLocaleString('en')+(target>=1000000?' ريال':' ريال');
   },16);
 }
-
-/* ─── Reset ─── */
-function resetAll(){
-  consentP1=false;consentP2=false;
-  document.getElementById('btnP1').classList.remove('btn-pressed');
-  document.getElementById('btnP2').classList.remove('btn-pressed');
-  document.getElementById('warnAlert').classList.remove('show');
-  document.getElementById('okAlert').classList.remove('show');
-  var arc=document.getElementById('gaugeArc');if(arc)arc.style.strokeDashoffset='502.65';
-  document.getElementById('gaugeVal').textContent='0%';
-  ['barSick','barCar','barSafe'].forEach(function(id){var e=document.getElementById(id);if(e)e.style.width='0%'});
-  document.getElementById('cntChild').textContent='0';
-  document.getElementById('cntMoney').textContent='0';
-  document.getElementById('cntFam').textContent='0';
-  document.getElementById('cntBed').textContent='0';
-  document.querySelectorAll('.btn-pressed').forEach(function(b){if(b.id!=='btnP1'&&b.id!=='btnP2')b.classList.remove('btn-pressed')});
-  goTo('s1');
-}
 </script>
-
 </body>
 </html>
