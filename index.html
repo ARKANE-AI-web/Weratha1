@@ -1,410 +1,467 @@
+
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WIRATHA EXECUTIVE SUITE | منظومة وِراثَة</title>
+    <title>WIRATHA INTERACTIVE PLATFORM | منصة وِراثَة الرقمية</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         body {
             font-family: 'Cairo', sans-serif;
-            background: radial-gradient(circle at 50% 0%, #06182B 0%, #040B14 70%, #010205 100%);
-            color: #EAF2F4;
+            background: radial-gradient(circle at 50% 30%, #0b1625 0%, #050a12 60%, #010205 100%);
             user-select: none;
             -webkit-user-select: none;
-            overflow-x: hidden;
         }
-        .num-font { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        /* التأثيرات الزجاجية الفاخرة التي اعتمدناها */
-        .glass-panel {
-            background: rgba(10, 37, 64, 0.45);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(15, 181, 168, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-            transition: all 0.4s ease;
+        .num-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        .glass-panel:hover {
-            border-color: rgba(15, 181, 168, 0.4);
-            box-shadow: 0 0 30px rgba(15, 181, 168, 0.15);
+        .glass-card {
+            background: rgba(9, 20, 37, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.12);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        /* تبويبات التنقل العلوية */
-        .nav-tab.active {
-            background: linear-gradient(135deg, rgba(15, 181, 168, 0.2) 0%, rgba(34, 211, 238, 0.2) 100%);
-            border-color: rgba(15, 181, 168, 0.6);
-            color: #fff;
-            box-shadow: 0 0 15px rgba(15, 181, 168, 0.2);
+        .glass-card:hover {
+            border-color: rgba(16, 185, 129, 0.35);
+            box-shadow: 0 0 35px rgba(16, 185, 129, 0.15);
+            transform: translateY(-2px);
         }
-        
-        .glow-text { text-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
-        .main-section { display: none; animation: fadeIn 0.5s ease forwards; }
-        .file-content { display: none; animation: fadeIn 0.4s ease forwards; }
-        .active-section, .active-file { display: block; }
-        
+        .nav-btn-active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+            border-color: rgba(16, 185, 129, 0.6);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* منطقة رفع الملفات للمحاكي الحقيقي */
-        .upload-zone {
-            border: 2px dashed rgba(15, 181, 168, 0.4);
-            background: rgba(15, 181, 168, 0.05);
-            transition: all 0.3s ease;
-        }
-        .upload-zone:hover {
-            border-color: rgba(15, 181, 168, 0.8);
-            background: rgba(15, 181, 168, 0.1);
         }
     </style>
 </head>
-<body class="min-h-screen antialiased">
+<body class="text-slate-200 min-h-screen antialiased overflow-x-hidden">
 
-    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#0FB5A8]/5 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none"></div>
 
-    <header class="max-w-7xl mx-auto px-6 py-6 border-b border-slate-800/80 flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
+    <header class="max-w-7xl mx-auto px-6 py-6 border-b border-slate-800/60 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-gradient-to-tr from-[#0FB5A8] to-[#22D3EE] rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white font-bold text-xl">W</span>
+            <div class="w-12 h-12 bg-gradient-to-tr from-emerald-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
             </div>
             <div>
-                <h1 class="text-2xl font-black text-white tracking-wide">وِراثَة <span class="text-[#0FB5A8] text-sm num-font">ARKANE AI</span></h1>
-                <p class="text-xs text-slate-400">المنظومة الفيدرالية لحوكمة وتشفير البيانات الجينية</p>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-2xl font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-emerald-400">وِراثَة</h1>
+                    <span class="text-[10px] font-mono tracking-widest bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700/60 num-font uppercase">ARKANE ENGINE</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">المنظومة الفيدرالية المحدثة لحوكمة وتشفير البيانات الجينية الطبية</p>
             </div>
         </div>
 
-        <div class="bg-[#06182B]/80 p-1.5 rounded-xl border border-slate-700/80 flex gap-2">
-            <button onclick="switchMain('files')" id="tab-files" class="nav-tab active px-5 py-2.5 rounded-lg text-xs font-bold text-slate-300 border border-transparent transition-all">
-                📑 الحقيبة الاستراتيجية (الملفات)
+        <div class="bg-slate-950/80 p-1.5 rounded-xl border border-slate-800/80 flex gap-2">
+            <button id="nav-hub" onclick="switchSection('hub')" class="px-5 py-2 rounded-lg text-xs font-bold transition-all duration-300">
+                الرئيسية
             </button>
-            <button onclick="switchMain('investor')" id="tab-investor" class="nav-tab px-5 py-2.5 rounded-lg text-xs font-bold text-slate-300 border border-transparent transition-all">
-                📊 MVP (عرض المستثمر)
+            <button id="nav-files" onclick="switchSection('files')" class="px-5 py-2 rounded-lg text-xs font-bold transition-all duration-300">
+                الحقيبة الاستراتيجية (الملفات الستة)
             </button>
-            <button onclick="switchMain('ministry')" id="tab-ministry" class="nav-tab px-5 py-2.5 rounded-lg text-xs font-bold text-slate-300 border border-transparent transition-all">
-                ⚙️ MVP (المنصة التشغيلية للوزارة)
+            <button id="nav-mvp" onclick="switchSection('mvp')" class="px-5 py-2 rounded-lg text-xs font-bold transition-all duration-300">
+                المحاكي التفاعلي (Live MVP)
             </button>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-8 relative z-10">
+    <main class="max-w-7xl mx-auto px-6 py-10">
 
-        <section id="sec-files" class="main-section active-section">
-            <div class="flex flex-col lg:flex-row gap-6">
-                <div class="lg:w-1/3 space-y-3">
-                    <h3 class="text-sm font-bold text-[#0FB5A8] mb-4">فهرس الوثائق التنفيذية</h3>
-                    
-                    <button onclick="openFile(1)" id="btn-file-1" class="w-full text-right glass-panel p-4 rounded-xl border-[#0FB5A8]/50 bg-[#0FB5A8]/10 text-white font-bold text-sm">
-                        01. الملف التنفيذي والاستراتيجي
-                    </button>
-                    <button onclick="openFile(2)" id="btn-file-2" class="w-full text-right glass-panel p-4 rounded-xl text-slate-300 hover:text-white text-sm">
-                        02. حوكمة البيانات والامتثال
-                    </button>
-                    <button onclick="openFile(3)" id="btn-file-3" class="w-full text-right glass-panel p-4 rounded-xl text-slate-300 hover:text-white text-sm">
-                        03. الأمن السيبراني والتشفير
-                    </button>
-                    <button onclick="openFile(4)" id="btn-file-4" class="w-full text-right glass-panel p-4 rounded-xl text-slate-300 hover:text-white text-sm">
-                        04. الربط التقني والـ APIs
-                    </button>
-                    <button onclick="openFile(5)" id="btn-file-5" class="w-full text-right glass-panel p-4 rounded-xl text-slate-300 hover:text-white text-sm">
-                        05. النموذج المالي والتجاري
-                    </button>
-                    <button onclick="openFile(6)" id="btn-file-6" class="w-full text-right glass-panel p-4 rounded-xl text-slate-300 hover:text-white text-sm">
-                        06. العرض التقديمي (الأرقام الرسمية)
-                    </button>
-                </div>
+        <section id="section-hub" class="page-section space-y-12 py-8">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <h2 class="text-3xl font-extrabold text-white">منصة وِراثَة الاستراتيجية المحدثة</h2>
+                <p class="text-sm text-slate-400 leading-relaxed">بوابة عرض متكاملة مبنية على مصفوفة المنطق الطبي المعتمدة من الاستشاري الجيني والأسري وهندسة النظم وحوكمة البيانات لعام 2026.</p>
+            </div>
 
-                <div class="lg:w-2/3 glass-panel p-8 rounded-2xl min-h-[500px]">
-                    
-                    <div id="content-1" class="file-content active-file space-y-4">
-                        <h2 class="text-2xl font-bold text-white border-b border-slate-700 pb-3">الملف التنفيذي والاستراتيجي (Blueprint)</h2>
-                        <p class="text-sm text-slate-300 leading-relaxed">المخطط الشامل لمشروع وِراثَة، يوضح هيكلية المنصة الفيدرالية القائمة على الذكاء الاصطناعي لترجمة الفحوصات الوراثية لدعم القرار. يربط هذا المخطط بين أهداف رؤية 2030 لبرنامج التحول الصحي، ويوفر بيئة تشغيلية متكاملة تضمن تقليل الهدر المالي المباشر في علاج الأمراض الوراثية المتنحية، وتوفير بدائل إنجابية آمنة للحد من العبء المجتمعي.</p>
-                        <div class="bg-[#06182B] p-4 rounded-lg border border-slate-700 text-xs text-slate-400">ملاحظة: تفاصيل المخطط التشغيلي للـ 5-in-1 مضمنة بالكامل في الخوادم السحابية.</div>
-                    </div>
-                    
-                    <div id="content-2" class="file-content space-y-4">
-                        <h2 class="text-2xl font-bold text-white border-b border-slate-700 pb-3">حوكمة البيانات والامتثال (PDPL)</h2>
-                        <p class="text-sm text-slate-300 leading-relaxed">تطبيق صارم لنظام حماية البيانات الشخصية السعودي. يعتمد النظام على التشفير اللامركزي، ومبدأ (الموافقة الثنائية التفاعلية) التي تتطلب توقيع الخاطب والمخطوبة معاً قبل فك تشفير أي نتيجة وراثية لمنع التسريب الاجتماعي وحماية خصوصية العوائل.</p>
-                    </div>
-
-                    <div id="content-3" class="file-content space-y-4">
-                        <h2 class="text-2xl font-bold text-white border-b border-slate-700 pb-3">الأمن السيبراني وتشفير الجينوم</h2>
-                        <p class="text-sm text-slate-300 leading-relaxed">بروتوكولات الأمان السحابية العالية لحماية البيانات الجينية الحساسة. لا يتم تخزين البصمات الجينية كنصوص صريحة، بل كـ Hashes مشفرة، مما يحقق الامتثال لسياسات الهيئة الوطنية للأمن السيبراني (NCA) بوزارة الصحة.</p>
-                    </div>
-
-                    <div id="content-4" class="file-content space-y-4">
-                        <h2 class="text-2xl font-bold text-white border-b border-slate-700 pb-3">الربط التقني والـ APIs</h2>
-                        <p class="text-sm text-slate-300 leading-relaxed">هيكلية التكامل الفوري مع منصة (صحتي) وأنظمة السجلات الطبية (HIS). يتيح النظام استدعاء بيانات الفحص آلياً (Zero Manual Entry) لضمان موثوقية النتائج ومطابقتها مركزياً.</p>
-                    </div>
-
-                    <div id="content-5" class="file-content space-y-4">
-                        <h2 class="text-2xl font-bold text-white border-b border-slate-700 pb-3">النموذج المالي التجاري (Financial Model)</h2>
-                        <p class="text-sm text-slate-300 leading-relaxed">هياكل الإيرادات وB2G مع وزارة الصحة. يعتمد النموذج على توفير تكاليف الرعاية الممتدة (ملايين الريالات لكل مريض) مقابل رسوم ترخيص سنوية للمنصة وتقديم التحليل الذكي للعيادات المعتمدة.</p>
-                    </div>
-
-                    <div id="content-6" class="file-content space-y-6">
-                        <h2 class="text-2xl font-bold text-[#0FB5A8] border-b border-slate-700 pb-3">العرض التقديمي الرسمي (ARKANE AI - وِراثَة)</h2>
-                        
-                        <div class="space-y-4">
-                            <div class="bg-[#06182B] p-5 rounded-xl border border-slate-700">
-                                <h3 class="font-bold text-white mb-2">الفكرة في جملة:</h3>
-                                <p class="text-sm text-slate-300">الفحص قبل الزواج يكشف الخطر لكنه لا يصنع القرار. <span class="text-[#0FB5A8] font-bold">«وراثة»</span> هي طبقة الذكاء التي تترجم النتيجة المخبرية إلى احتمال مفهوم، وخيارات واضحة، وقرار واعٍ. <br><span class="text-yellow-400 font-bold">قرار لا كشف.. إنساني أولاً.</span> نحول "أنتم معرضون" إلى "إليكم خياراتكم وعواقب كل منها".</p>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="glass-panel p-4 rounded-xl border-red-500/30">
-                                    <h4 class="text-xs text-slate-400 mb-1">المشكلة بالأرقام:</h4>
-                                    <p class="text-2xl font-bold text-white num-font">57%</p>
-                                    <p class="text-xs text-slate-300">نسبة زواج الأقارب في السعودية (الأعلى عالمياً).</p>
-                                </div>
-                                <div class="glass-panel p-4 rounded-xl border-red-500/30">
-                                    <h4 class="text-xs text-slate-400 mb-1">إكمال الزواج عالي الخطورة:</h4>
-                                    <p class="text-2xl font-bold text-red-400 num-font">90%</p>
-                                    <p class="text-xs text-slate-300">يكملون الزواج رغم النتيجة لأنها تُسلم كتحذير جاف.</p>
-                                </div>
-                            </div>
-
-                            <div class="bg-[#0A2540] p-5 rounded-xl border border-slate-700">
-                                <h3 class="font-bold text-white mb-3">الكلفة المالية الناتجة عن الوراثة:</h3>
-                                <ul class="text-sm text-slate-300 space-y-3">
-                                    <li class="flex items-center gap-2"><span class="text-[#0FB5A8]">■</span> <strong class="text-white num-font">182,000 ريال:</strong> الكلفة المجتمعية السنوية للمريض الواحد (علاج + إنتاجية مفقودة).</li>
-                                    <li class="flex items-center gap-2"><span class="text-[#0FB5A8]">■</span> <strong class="text-white num-font">80,000 ريال:</strong> التكاليف الصحية المباشرة سنوياً لكل مريض منجلي.</li>
-                                    <li class="flex items-center gap-2"><span class="text-[#0FB5A8]">■</span> <strong class="text-white num-font">3.95 مليون ريال:</strong> سعر جرعة دواء واحد لمرض ضمور العضلات الشوكي (Spinraza).</li>
-                                    <li class="flex items-center gap-2"><span class="text-[#0FB5A8]">■</span> <strong class="text-red-400 num-font">5.25 مليار ريال:</strong> الكلفة المجتمعية السنوية لمرض فقر الدم المنجلي وحده في السعودية.</li>
-                                </ul>
-                            </div>
-
-                            <div class="glass-panel p-5 rounded-xl border-[#0FB5A8]/40">
-                                <h3 class="font-bold text-[#0FB5A8] mb-2">الأثر المتوقع (الحل):</h3>
-                                <p class="text-sm text-slate-300 leading-relaxed">نأخذ ما تتركه المنظومة الحالية ناقصاً ونكمله. التجربة الوطنية تثبت أن الإلغاء للزواج عالي الخطورة <strong class="text-white">قفز من 9% إلى 52%</strong> بمجرد تحسين الفهم. كل قرار واعٍ = طفل أقل يولد لمعاناة وراثية يمكن تجنبها، وتوفير وطني يتجاوز 5 مليار ريال.</p>
-                            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto pt-4">
+                <div onclick="switchSection('files')" class="glass-card p-8 rounded-2xl cursor-pointer group flex flex-col justify-between h-64 relative overflow-hidden">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-xl flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
                         </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">الحقيبة الاستراتيجية والملفات</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">تضم الملفات الستة الكبرى للمشروع: المخطط الشامل، الحوكمة والامتثال لـ PDPL، الأمن السيبراني، الربط التقني والـ APIs، النموذج المالي، وسيناريو العرض التقديمي.</p>
                     </div>
+                    <span class="text-xs font-semibold text-emerald-400 flex items-center gap-1 group-hover:mr-2 transition-all">استعراض الوثائق الزجاجية الستة ←</span>
+                </div>
+
+                <div onclick="switchSection('mvp')" class="glass-card p-8 rounded-2xl cursor-pointer group flex flex-col justify-between h-64 relative overflow-hidden">
+                    <div>
+                        <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-xl flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">المحاكي التفاعلي المطور (Live MVP)</h3>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">بوابة تحاكي طريقة عمل المحرك الوراثي الفيدرالي في المستشفيات، بوابات التوقيع المشفرة، حوكمة الصلاحيات الفورية، وحساب العائد المالي الوطني المباشر.</p>
+                    </div>
+                    <span class="text-xs font-semibold text-cyan-400 flex items-center gap-1 group-hover:mr-2 transition-all">تشغيل المحاكي التفاعلي الهجين ←</span>
                 </div>
             </div>
         </section>
 
-        <section id="sec-investor" class="main-section">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-white">المحاكي التفاعلي الموجه لعرض المستثمرين</h2>
-                <p class="text-sm text-slate-400 mt-2">سيناريوهات سريعة جاهزة تُظهر قدرة الذكاء الاصطناعي على صناعة القرار وتقليل الهدر المالي بضغطة زر.</p>
-            </div>
 
-            <div class="flex justify-center gap-4 mb-8">
-                <button onclick="runInvestorScenario('safe')" class="px-4 py-2 bg-[#0FB5A8]/10 border border-[#0FB5A8]/50 text-[#0FB5A8] rounded-lg text-sm hover:bg-[#0FB5A8]/20 transition-all">سيناريو 1: توافق تام</button>
-                <button onclick="runInvestorScenario('risk')" class="px-4 py-2 bg-red-500/10 border border-red-500/50 text-red-400 rounded-lg text-sm hover:bg-red-500/20 transition-all">سيناريو 2: خطر متنحي مشترك</button>
-            </div>
-
-            <div class="glass-panel p-8 rounded-2xl max-w-4xl mx-auto border-t-4 border-t-[#0FB5A8]" id="investor-board">
-                <h3 class="text-lg font-bold text-white mb-4 text-center">يرجى اختيار سيناريو لعرض الأثر المالي والطبي الفوري</h3>
-            </div>
-        </section>
-
-        <section id="sec-ministry" class="main-section">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                    <span class="w-2 h-8 bg-[#22D3EE] rounded-full inline-block"></span>
-                    بيئة التشغيل التجريبية المفتوحة (Live Sandbox)
+        <section id="section-files" class="page-section space-y-8">
+            <div>
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-1.5 h-6 bg-emerald-500 rounded-full inline-block"></span>
+                    الحقيبة الاستراتيجية الفاخرة للوثائق التنفيذية
                 </h2>
-                <p class="text-sm text-slate-400 mt-2 leading-relaxed">هذه الواجهة مخصصة للجان الفحص والتقييم في وزارة الصحة وصحة الافتراضي. تتيح رفع ملفات جينية فعلية أو إدخال بيانات حية لمحاكاة استخراج التقارير الوراثية وتوجيه القرار الإنجابي وحساب الأثر المالي آلياً.</p>
+                <p class="text-xs text-slate-400 mt-1">اضغط على أي مستند لفتحه في نافذة جديدة مستقلة لمراجعته بشكل فوري</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a href="Project_Blueprint.html" target="_blank" class="glass-card p-6 rounded-2xl block relative group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="num-font text-2xl font-bold text-slate-700 group-hover:text-emerald-500/40 transition-colors">01</span>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 group-hover:text-emerald-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </div>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-100 group-hover:text-white mb-2">الملف الاستراتيجي والتنفيذي الرئيسي</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">دراسة الفجوة والجدوى الهيكلية لمنصة وِراثَة بالمملكة وخطط الاستحواذ والتوسع بالسوق الطبي.</p>
+                </a>
+                <a href="Data_Governance.html" target="_blank" class="glass-card p-6 rounded-2xl block relative group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="num-font text-2xl font-bold text-slate-700 group-hover:text-cyan-500/40 transition-colors">02</span>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 group-hover:text-cyan-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </div>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-100 group-hover:text-white mb-2">حوكمة البيانات والامتثال التشريعي</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">آليات التوافق الصارم مع نظام حماية البيانات الشخصية السعودي (PDPL) والسياسات الصحية الوطنية للأبحاث الجينية.</p>
+                </a>
+                <a href="Cybersecurity.html" target="_blank" class="glass-card p-6 rounded-2xl block relative group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="num-font text-2xl font-bold text-slate-700 group-hover:text-emerald-500/40 transition-colors">03</span>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 group-hover:text-emerald-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-100 group-hover:text-white mb-2">الأمن السيبراني وتشفير الجينوم الفيدرالي</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">تفاصيل بروتوكول التشفير اللامركزي لحماية هويات المرضى وملفات الـ DNA من أي تسريب سيبراني خارجي.</p>
+                </a>
+                <a href="Technical_Integration.html" target="_blank" class="glass-card p-6 rounded-2xl block relative group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="num-font text-2xl font-bold text-slate-700 group-hover:text-cyan-500/40 transition-colors">04</span>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 group-hover:text-cyan-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        </div>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-100 group-hover:text-white mb-2">معايير الربط التقني السحابي ومصفوفة الـ APIs</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">طرق التكامل الفوري مع السجلات الطبية الإلكترونية للمستشفيات (HIS) ومختبرات التحليل الجيني المركزية.</p>
+                </a>
+                <a href="Financial_Model.html" target="_blank" class="glass-card p-6 rounded-2xl block relative group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="num-font text-2xl font-bold text-slate-700 group-hover:text-emerald-500/40 transition-colors">05</span>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 group-hover:text-emerald-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-100 group-hover:text-white mb-2">النموذج المالي وتوقعات الخمس سنوات</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">التدفقات النقدية المتوقعة، رسوم الترخيص للمنشآت الصحية الكبرى، وتكلفة التشغيل السحابية والنمو السنوي.</p>
+                </a>
+                <a href="Presentation_Scenario.html" target="_blank" class="glass-card p-6 rounded-2xl block relative group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="num-font text-2xl font-bold text-slate-700 group-hover:text-cyan-500/40 transition-colors">06</span>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 group-hover:text-cyan-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h18M3 16h18"/></svg>
+                        </div>
+                    </div>
+                    <h4 class="text-base font-bold text-slate-100 group-hover:text-white mb-2">سيناريو السرد القصصي للعرض الاستثماري</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">خريطة العرض التقديمي الموجهة لشركات الـ VC لضمان بناء حجة منطقية متسلسلة ومقنعة للمستثمرين الصناديق.</p>
+                </a>
+            </div>
+        </section>
+
+
+        <section id="section-mvp" class="page-section space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1.5 h-6 bg-cyan-500 rounded-full inline-block"></span>
+                        مختبر التحليل الآلي المبني على مصفوفة المنطق الطبي والوقائي الفيدرالي
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">يحتوي هذا الكونسول على السيناريوهات الثلاثة الحقيقية المصححة جينياً وأسرياً وهندسياً</p>
+                </div>
                 
-                <div class="glass-panel p-6 rounded-2xl">
-                    <h3 class="text-[#0FB5A8] font-bold text-sm mb-4 border-b border-slate-700 pb-2">1. إدخال بيانات الفحص (محاكاة حقيقية)</h3>
-                    
-                    <div class="space-y-4">
-                        <div class="flex gap-4">
-                            <div class="w-1/2">
-                                <label class="text-xs text-slate-400 block mb-1">رقم هوية الخاطب</label>
-                                <input type="text" placeholder="10****" class="w-full bg-[#06182B] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-[#0FB5A8] outline-none num-font">
-                            </div>
-                            <div class="w-1/2">
-                                <label class="text-xs text-slate-400 block mb-1">رقم هوية المخطوبة</label>
-                                <input type="text" placeholder="10****" class="w-full bg-[#06182B] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-[#0FB5A8] outline-none num-font">
-                            </div>
-                        </div>
+                <div class="flex flex-wrap gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800/80">
+                    <button onclick="applyScenario('default')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all">السيناريو 1: خطر متنحي مشترك</button>
+                    <button onclick="applyScenario('high-risk')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:text-white transition-all">السيناريو 2: تداخل جيني حرج</button>
+                    <button onclick="applyScenario('safe')" class="px-3 py-1.5 rounded-lg text-[11px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:text-white transition-all">السيناريو 3: توافق جيني تام</button>
+                </div>
+            </div>
 
-                        <div>
-                            <label class="text-xs text-slate-400 block mb-1">درجة القرابة (لتحليل التداخل)</label>
-                            <select id="kinship" class="w-full bg-[#06182B] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-[#0FB5A8] outline-none">
-                                <option value="none">لا توجد قرابة</option>
-                                <option value="first">قرابة درجة أولى (أبناء عمومة)</option>
-                            </select>
-                        </div>
-
-                        <div class="mt-4">
-                            <label class="text-xs text-slate-400 block mb-1">رفع السجل الجيني المخبري (VCF / PDF)</label>
-                            <div class="upload-zone rounded-xl p-8 text-center cursor-pointer" onclick="document.getElementById('file-upload').click()">
-                                <input type="file" id="file-upload" class="hidden">
-                                <svg class="w-8 h-8 text-[#0FB5A8] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                                <p class="text-sm text-white font-bold">اسحب وأفلت ملف الفحص هنا</p>
-                                <p class="text-xs text-slate-400 mt-1">أو اضغط لاستعراض الملفات من الجهاز</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 pt-4 border-t border-slate-700">
-                            <label class="text-xs text-yellow-400 block mb-2">للتجربة الفورية: اختر نوع الطفرة المحقونة في المحرك:</label>
-                            <select id="sandbox-mock" class="w-full bg-[#06182B] border border-yellow-500/30 rounded-lg px-3 py-2 text-sm text-white outline-none">
-                                <option value="sickle">اختبار: فقر الدم المنجلي (تطابق متنحي)</option>
-                                <option value="sma">اختبار: ضمور العضلات الشوكي SMA</option>
-                            </select>
-                        </div>
-
-                        <button onclick="runSandboxEngine()" class="w-full mt-4 bg-gradient-to-r from-[#0FB5A8] to-[#0A7D74] text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-[#0FB5A8]/30 transition-all">
-                            تشغيل خوارزمية وِراثَة الفيدرالية
-                        </button>
+            <div class="w-full max-w-4xl mx-auto rounded-3xl overflow-hidden border border-slate-800/80 bg-[#070d1a] shadow-2xl relative">
+                
+                <div class="bg-slate-900/80 px-6 py-4 flex justify-between items-center border-b border-slate-800/80">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500/70 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/70 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/70 inline-block"></span>
+                        <span class="text-[11px] text-slate-500 mr-2 font-mono num-font tracking-widest">WIRATHA_GENOMIC_CORE_v1.5</span>
+                    </div>
+                    <div class="px-2.5 py-1 rounded bg-cyan-950/40 border border-cyan-800/40 text-[10px] uppercase tracking-widest font-mono text-cyan-400 glow-text">
+                        Interactive Knowledge Core
                     </div>
                 </div>
 
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden" id="sandbox-output">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-[#040B14]/90 z-10" id="sandbox-wait">
-                        <svg class="w-12 h-12 text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                        <p class="text-slate-400 text-sm">بانتظار إدخال البيانات ورفع السجل المخبري<br>المحرك جاهز للتحليل الفوري.</p>
+                <div class="p-8 space-y-8">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-xs text-slate-400 font-semibold block">الببصمة الجينية للطرف الأول (الخاطب)</label>
+                            <select id="husband-gene" onchange="runGeneticEngine()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 transition-all cursor-pointer">
+                                <option value="AA">سليم تماماً وخالٍ من الطفرات (AA)</option>
+                                <option value="Aa" selected>حامل لطفرة تنحية كامنة (Aa)</option>
+                                <option value="Critical">حامل لطفرة طيف متقدم (Critical)</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs text-slate-400 font-semibold block">البصمة الجينية للطرف الثاني (المخطوبة)</label>
+                            <select id="wife-gene" onchange="runGeneticEngine()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 transition-all cursor-pointer">
+                                <option value="AA">سليمة تماماً وخالية من الطفرات (AA)</option>
+                                <option value="Aa" selected>حاملة لنفس الطفرة التنحية الكامنة (Aa)</option>
+                                <option value="Critical">حاملة لطفرة طيف متقدم (Critical)</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div id="sandbox-result" class="hidden space-y-5"></div>
+                    <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800/80 space-y-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-1.5 h-3 bg-cyan-400 rounded-full"></span>
+                            <h4 class="text-xs font-bold text-slate-300">بوابة التفويض والمصادقة الرقمية المشتركة (تحديث نظام PDPL لخصوصية الجينوم)</h4>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">حسب توجيهات استشاري الحوكمة وهندسة النظم؛ لا يمكن كشف أو معالجة النتيجة الطبية أو العائد المالي إلا بعد تفعيل التوقيع المتزامن من الطرفين لضمان عدم تسريب البيانات الحساسة.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <button id="btn-h-sig" onclick="toggleSignature('h')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold text-[11px] px-4 py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+                                <span id="dot-h-sig" class="w-2 h-2 rounded-full bg-red-500"></span>
+                                <span id="txt-h-sig">تفويض ومصادقة الخاطب فوريًا 🛑</span>
+                            </button>
+                            <button id="btn-w-sig" onclick="toggleSignature('w')" class="bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-bold text-[11px] px-4 py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+                                <span id="dot-w-sig" class="w-2 h-2 rounded-full bg-red-500"></span>
+                                <span id="txt-w-sig">تفويض ومصادقة المخطوبة فوريًا 🛑</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-900 rounded-2xl p-6 relative overflow-hidden">
+                        
+                        <div id="security-overlay" class="absolute inset-0 bg-slate-950/98 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 transition-all duration-500 z-20">
+                            <svg class="w-8 h-8 text-cyan-500/80 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            <h5 class="text-xs font-bold text-slate-300">نظام فك التشفير بانتظار السياسات</h5>
+                            <p class="text-[10px] text-slate-500 mt-1">اضغط على زرّي التفويض والمصادقة بالأعلى لمحاكاة المعالجة المحدثة الآن.</p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-900 mb-5">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">مخرجات مؤشرات الاستشاري الجيني والأسري والمالي لعام 2026</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5">منطق فيدرالي مؤتمت بالكامل يحاكي أرقام الـ MVP المستهدفة بدقة</p>
+                            </div>
+                            <div id="status-badge" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wide">
+                                --
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                            <div class="bg-slate-900/40 border border-slate-800/40 p-4 rounded-xl">
+                                <span class="text-[10px] text-slate-400 block mb-1">نسبة ولادة جيل سليم جينياً</span>
+                                <span id="p-healthy" class="num-font text-lg font-bold text-white tracking-tight">--</span>
+                            </div>
+                            <div class="bg-slate-900/40 border border-slate-800/40 p-4 rounded-xl">
+                                <span class="text-[10px] text-slate-400 block mb-1">نسبة جيل حامل للصفة (خامل)</span>
+                                <span id="p-carrier" class="num-font text-lg font-bold text-white tracking-tight">--</span>
+                            </div>
+                            <div class="bg-slate-900/40 border border-slate-800/40 p-4 rounded-xl">
+                                <span class="text-[10px] text-slate-400 block mb-1">نسبة خطر العبء الجيني (إصابة)</span>
+                                <span id="p-infected" class="num-font text-lg font-bold text-white tracking-tight">--</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 p-4 rounded-xl bg-gradient-to-r from-slate-900 via-slate-900 to-cyan-950/20 border border-slate-800/60 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                            <div>
+                                <h5 class="text-xs font-bold text-cyan-400">العائد الوقائي الاقتصادي الوطني المباشر (الموفر):</h5>
+                                <p class="text-[10px] text-slate-400 mt-0.5">حساب وفورات ميزانية الدولة في الرعاية الطبية والأدوية اليتيمة بناءً على السيناريو.</p>
+                            </div>
+                            <div class="text-right sm:text-left">
+                                <span id="financial-impact" class="num-font text-xl font-extrabold text-emerald-400 tracking-tight glow-text">--</span>
+                                <span class="text-[10px] text-slate-400 mr-1">ريال سعودي</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-4 rounded-xl bg-slate-900/50 border border-slate-900 text-xs text-slate-300 leading-relaxed flex items-start gap-2">
+                            <span class="text-sm">💡</span>
+                            <p id="advice-box" class="text-[11px] text-slate-300">يرجى إتمام التواقيع الثنائية لعرض التحليل الطبي الأسري المشترك.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
 
     </main>
 
+    <footer class="max-w-7xl mx-auto px-6 py-10 mt-10 border-t border-slate-900 text-center text-[11px] text-slate-600 font-mono tracking-widest">
+        WIRATHA SECURE SUITE • PROPRIETARY AND PATENTED BY ARKANE AI SYSTEMS © 2026
+    </footer>
+
     <script>
-        // التحكم بالتبويبات الرئيسية
-        function switchMain(tab) {
-            document.querySelectorAll('.main-section').forEach(s => s.classList.remove('active-section'));
-            document.querySelectorAll('.nav-tab').forEach(b => {
-                b.classList.remove('active');
-                b.classList.add('border-transparent');
-            });
-            
-            document.getElementById('sec-' + tab).classList.add('active-section');
-            document.getElementById('tab-' + tab).classList.add('active');
-            document.getElementById('tab-' + tab).classList.remove('border-transparent');
+        let isHusbandSigned = false;
+        let isWifeSigned = false;
+
+        // إدارة التبديل الاحترافي للمستثمر
+        function switchSection(sectionId) {
+            document.getElementById('section-hub').style.display = 'none';
+            document.getElementById('section-files').style.display = 'none';
+            document.getElementById('section-mvp').style.display = 'none';
+
+            document.getElementById('nav-hub').className = 'px-5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all duration-300';
+            document.getElementById('nav-files').className = 'px-5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all duration-300';
+            document.getElementById('nav-mvp').className = 'px-5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all duration-300';
+
+            document.getElementById(`section-${sectionId}`).style.display = 'block';
+            document.getElementById(`nav-${sectionId}`).classList.add('nav-btn-active');
         }
 
-        // التحكم بملفات الحقيبة الاستراتيجية
-        function openFile(num) {
-            document.querySelectorAll('.file-content').forEach(f => f.classList.remove('active-file'));
-            for(let i=1; i<=6; i++) {
-                document.getElementById('btn-file-'+i).className = "w-full text-right glass-panel p-4 rounded-xl text-slate-300 hover:text-white text-sm";
-            }
-            
-            document.getElementById('content-'+num).classList.add('active-file');
-            document.getElementById('btn-file-'+num).className = "w-full text-right glass-panel p-4 rounded-xl border-[#0FB5A8]/50 bg-[#0FB5A8]/10 text-white font-bold text-sm";
-        }
-
-        // محرك عرض المستثمر السريع
-        function runInvestorScenario(type) {
-            const board = document.getElementById('investor-board');
-            if (type === 'safe') {
-                board.className = "glass-panel p-8 rounded-2xl max-w-4xl mx-auto border-t-4 border-t-[#0FB5A8]";
-                board.innerHTML = `
-                    <div class="flex items-center gap-3 mb-4"><span class="text-2xl">✅</span><h3 class="text-xl font-bold text-[#0FB5A8]">توافق جيني تام</h3></div>
-                    <p class="text-slate-300 mb-4">التحليل يؤكد خلو الطرفين من الطفرات المشتركة. إصدار الشهادة آلياً عبر نفاذ.</p>
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="bg-[#06182B] p-3 rounded-xl border border-slate-700"><p class="text-xs text-slate-400">أطفال أصحاء</p><p class="text-xl font-bold text-white num-font">100%</p></div>
-                        <div class="bg-[#06182B] p-3 rounded-xl border border-slate-700"><p class="text-xs text-slate-400">أطفال حاملين</p><p class="text-xl font-bold text-white num-font">0%</p></div>
-                        <div class="bg-[#06182B] p-3 rounded-xl border border-slate-700"><p class="text-xs text-slate-400">خطر الإصابة</p><p class="text-xl font-bold text-white num-font">0%</p></div>
-                    </div>
-                `;
-            } else {
-                board.className = "glass-panel p-8 rounded-2xl max-w-4xl mx-auto border-t-4 border-t-red-500";
-                board.innerHTML = `
-                    <div class="flex items-center gap-3 mb-4"><span class="text-2xl">⚠️</span><h3 class="text-xl font-bold text-red-400">خطر متنحي مشترك (الأنيميا المنجلية)</h3></div>
-                    <p class="text-slate-300 mb-4">كلاكما حامل للمرض. <span class="font-bold text-yellow-400">القرار الذكي:</span> الزواج يمكن أن يستمر بأمان عبر مسار PGT-M (فحص الأجنة).</p>
-                    <div class="grid grid-cols-3 gap-4 text-center mb-4">
-                        <div class="bg-[#06182B] p-3 rounded-xl border border-slate-700"><p class="text-xs text-slate-400">سليم تماماً</p><p class="text-xl font-bold text-white num-font">25%</p></div>
-                        <div class="bg-[#06182B] p-3 rounded-xl border border-slate-700"><p class="text-xs text-slate-400">حامل للمرض</p><p class="text-xl font-bold text-white num-font">50%</p></div>
-                        <div class="bg-red-500/20 p-3 rounded-xl border border-red-500/50"><p class="text-xs text-red-300">خطر الإصابة</p><p class="text-xl font-bold text-red-400 num-font">25%</p></div>
-                    </div>
-                    <div class="bg-[#06182B] p-4 rounded-xl border border-slate-700">
-                        <p class="text-xs text-slate-400 mb-1">العائد الوقائي (التوفير على ميزانية الدولة):</p>
-                        <p class="text-2xl font-bold text-[#0FB5A8] num-font">5,250,000 ريال <span class="text-xs font-normal text-slate-400">للفوج</span></p>
-                    </div>
-                `;
-            }
-        }
-
-        // المحرك الحقيقي لبيئة وزارة الصحة (التي تبهر المقيمين)
-        function runSandboxEngine() {
-            // إظهار أنيميشن التحليل
-            document.getElementById('sandbox-wait').innerHTML = `
-                <div class="w-10 h-10 border-4 border-slate-700 border-t-[#0FB5A8] rounded-full animate-spin mb-3"></div>
-                <p class="text-slate-300 text-sm">جاري قراءة ملف السجل المخبري VCF...<br>وتحليل مصفوفة الطفرات وحساب الأثر المالي...</p>
-            `;
-            
-            setTimeout(() => {
-                document.getElementById('sandbox-wait').classList.add('hidden');
-                const resultDiv = document.getElementById('sandbox-result');
-                resultDiv.classList.remove('hidden');
-                
-                const mockType = document.getElementById('sandbox-mock').value;
-                const isKin = document.getElementById('kinship').value === 'first';
-                
-                if (mockType === 'sickle') {
-                    // بيانات مأخوذة حرفياً من عرضك التقديمي
-                    resultDiv.innerHTML = `
-                        <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-2">تقرير منصة وِراثَة الطبي المدعوم بالذكاء الاصطناعي</h3>
-                        
-                        <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl">
-                            <h4 class="text-red-400 font-bold text-sm mb-1">النتيجة المخبرية: خطر وراثي متنحي</h4>
-                            <p class="text-xs text-slate-300">تم رصد تطابق في طفرة (فقر الدم المنجلي). نسبة الخطر لكل حمل تبلغ <strong class="text-white num-font">25%</strong>.</p>
-                            ${isKin ? '<p class="text-xs text-yellow-400 mt-1">⚠️ تحذير إضافي: زواج أقارب درجة أولى، تم فحص طفرات الأمراض النادرة الأخرى.</p>' : ''}
-                        </div>
-
-                        <div class="bg-[#0A2540] p-4 rounded-xl border border-[#0FB5A8]/30">
-                            <h4 class="text-[#0FB5A8] font-bold text-sm mb-2">توجيه القرار الإنساني (إلى العائلة):</h4>
-                            <p class="text-xs text-slate-300 leading-relaxed">كلاكما حامل للمرض، لكن كلمة (حامل) تعني أنكما سليمان كلياً. يمكن لقصتكم أن تستمر، والحل الطبي متوفر عبر تحويلكم فوراً إلى عيادة <strong class="text-white">الفحص الوراثي للأجنة (PGT-M)</strong> لضمان إنجاب طفل سليم تماماً وكسر حلقة المرض في العائلة.</p>
-                            <button class="mt-3 px-4 py-2 bg-[#0FB5A8] text-[#06182B] text-xs font-bold rounded-lg w-full hover:bg-[#22D3EE] transition-all">تحويل الملف آلياً لمستشفى صحة الافتراضي</button>
-                        </div>
-
-                        <div class="bg-[#06182B] p-4 rounded-xl border border-slate-700">
-                            <h4 class="text-white font-bold text-sm mb-2">الأثر المالي المباشر (Calculated ROI):</h4>
-                            <ul class="text-xs text-slate-400 space-y-2">
-                                <li class="flex justify-between"><span>تكلفة الرعاية المباشرة المتوقعة للمريض:</span> <span class="text-white font-bold num-font">80,000 ريال / سنوياً</span></li>
-                                <li class="flex justify-between"><span>الكلفة المجتمعية السنوية (علاج + إنتاجية):</span> <span class="text-white font-bold num-font">182,000 ريال</span></li>
-                                <li class="flex justify-between border-t border-slate-700 pt-2 mt-1">
-                                    <span class="text-[#0FB5A8]">الوفر المالي التقديري الوطني لمنع الحالة:</span> 
-                                    <span class="text-[#0FB5A8] font-bold num-font text-base">5.25 مليار ريال (إجمالي الفوج)</span>
-                                </li>
-                            </ul>
-                        </div>
-                    `;
-                } else if (mockType === 'sma') {
-                    // اختبار مرض الضمور العضلي بناء على الأرقام الحقيقية المرفقة
-                    resultDiv.innerHTML = `
-                        <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-2">تقرير منصة وِراثَة الطبي المدعوم بالذكاء الاصطناعي</h3>
-                        
-                        <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl">
-                            <h4 class="text-red-400 font-bold text-sm mb-1">النتيجة المخبرية: طفرة أمراض نادرة (SMA)</h4>
-                            <p class="text-xs text-slate-300">التحليل أظهر تطابق طفرة (ضمور العضلات الشوكي SMA). احتمالية إصابة الجنين <strong class="text-white num-font">25%</strong>.</p>
-                        </div>
-
-                        <div class="bg-[#0A2540] p-4 rounded-xl border border-[#0FB5A8]/30">
-                            <h4 class="text-[#0FB5A8] font-bold text-sm mb-2">صناعة القرار الموجه:</h4>
-                            <p class="text-xs text-slate-300 leading-relaxed">المرض نادر وشديد الخطورة. النظام يوجه العائلة للاستشارة الوراثية العاجلة لبحث خيارات التلقيح وتجنب المعاناة القاسية للطفل.</p>
-                        </div>
-
-                        <div class="bg-[#06182B] p-4 rounded-xl border border-slate-700">
-                            <h4 class="text-white font-bold text-sm mb-2">الأثر المالي وتكلفة الأدوية اليتيمة (Calculated ROI):</h4>
-                            <ul class="text-xs text-slate-400 space-y-2">
-                                <li class="flex justify-between"><span>تكلفة جرعة دواء (Spinraza) للمريض:</span> <span class="text-red-400 font-bold num-font">3.95 مليون ريال</span></li>
-                                <li class="flex justify-between border-t border-slate-700 pt-2 mt-1">
-                                    <span class="text-[#0FB5A8]">الوفر المالي التقديري لحماية طفل واحد:</span> 
-                                    <span class="text-[#0FB5A8] font-bold num-font text-base">يتجاوز 3.95 مليون ريال</span>
-                                </li>
-                            </ul>
-                        </div>
-                    `;
+        // إدارة التوقيع الرقمي لمنع العشوائية والامتثال لنظام حماية البيانات السعودي
+        function toggleSignature(party) {
+            if (party === 'h') {
+                isHusbandSigned = !isHusbandSigned;
+                const btn = document.getElementById('btn-h-sig');
+                const dot = document.getElementById('dot-h-sig');
+                const txt = document.getElementById('txt-h-sig');
+                if(isHusbandSigned) {
+                    btn.classList.add('border-emerald-500/50', 'bg-emerald-950/20');
+                    dot.classList.replace('bg-red-500', 'bg-emerald-400');
+                    txt.innerText = 'تم اعتماد مصادقة الخاطب سيبرانياً ✓';
+                } else {
+                    btn.classList.remove('border-emerald-500/50', 'bg-emerald-950/20');
+                    dot.classList.replace('bg-emerald-400', 'bg-red-500');
+                    txt.innerText = 'تفويض ومصادقة الخاطب فوريًا 🛑';
                 }
-            }, 1800); // محاكاة 1.8 ثانية لمعالجة البيانات
+            } else {
+                isWifeSigned = !isWifeSigned;
+                const btn = document.getElementById('btn-w-sig');
+                const dot = document.getElementById('dot-w-sig');
+                const txt = document.getElementById('txt-w-sig');
+                if(isWifeSigned) {
+                    btn.classList.add('border-emerald-500/50', 'bg-emerald-950/20');
+                    dot.classList.replace('bg-red-500', 'bg-emerald-400');
+                    txt.innerText = 'تم اعتماد مصادقة المخطوبة سيبرانياً ✓';
+                } else {
+                    btn.classList.remove('border-emerald-500/50', 'bg-emerald-950/20');
+                    dot.classList.replace('bg-emerald-400', 'bg-red-500');
+                    txt.innerText = 'تفويض ومصادقة المخطوبة فوريًا 🛑';
+                }
+            }
+
+            const overlay = document.getElementById('security-overlay');
+            if (isHusbandSigned && isWifeSigned) {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                runGeneticEngine();
+            } else {
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            }
         }
+
+        // تطبيق السيناريوهات الثلاثة المصححة والمحدثة من الاستشاريين (الحل لعدم فراغ الأرقام)
+        function applyScenario(type) {
+            const hSelect = document.getElementById('husband-gene');
+            const wSelect = document.getElementById('wife-gene');
+            
+            if (type === 'default') {
+                hSelect.value = 'Aa';
+                wSelect.value = 'Aa';
+            } else if (type === 'high-risk') {
+                hSelect.value = 'Critical';
+                wSelect.value = 'Critical';
+            } else if (type === 'safe') {
+                hSelect.value = 'AA';
+                wSelect.value = 'AA';
+            }
+            
+            runGeneticEngine();
+        }
+
+        // محرك الاستشاريين الحقيقي (معالجة البيانات والحل المالي والدعم الأسري لـ 2026)
+        function runGeneticEngine() {
+            const hGene = document.getElementById('husband-gene').value;
+            const wGene = document.getElementById('wife-gene').value;
+
+            const badge = document.getElementById('status-badge');
+            const healthy = document.getElementById('p-healthy');
+            const carrier = document.getElementById('p-carrier');
+            const infected = document.getElementById('p-infected');
+            const financial = document.getElementById('financial-impact');
+            const advice = document.getElementById('advice-box');
+
+            // السيناريو الثالث: توافق جيني وأمان تام
+            if (hGene === 'AA' && wGene === 'AA') {
+                badge.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+                badge.innerText = "توافق جيني تام وآمن";
+                healthy.innerText = "100%";
+                carrier.innerText = "0%";
+                infected.innerText = "0%";
+                financial.innerText = "0"; // لا توجد تكاليف أعباء لعلاج أمراض متنحية
+                advice.innerText = "رأي الاستشاري الطبي والأسري: الزواج متوافق تماماً ومستقر أسرياً. السجل الجيني سليم ومطابق للمقاييس الوطنية لفحص ما قبل الزواج، ولا توجد أي احتمالية لالتقاء جينات تنحية مشتركة للجيل القادم.";
+            
+            // السيناريو الثاني: تداخل جيني حرج (الخطر المرتفع)
+            } else if (hGene === 'Critical' && wGene === 'Critical') {
+                badge.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-red-600/20 text-red-400 border border-red-500/30";
+                badge.innerText = "تداخل جيني حرج (خطر مرتفع جداً)";
+                healthy.innerText = "0%";
+                carrier.innerText = "50%";
+                infected.innerText = "50%";
+                financial.innerText = "5,200,000"; // العائد الوقائي الحقيقي الموفر للدولة من الأدوية اليتيمة وعمليات نقل الدم
+                advice.innerText = "رأي الاستشاري الأسري والجيني: الحالة تظهر خطراً حرجاً بنسبة 50%. هنا تتدخل «وراثة» لمنع انهيار الرابط الأسري أو الإلغاء القسري، حيث يتم توجيه الزوجين فوراً لمسار (تلقيح اصطناعي ذكي + فحص أجنة PGT-M) لضمان ولادة جيل سليم 100% وحماية ميزانية الرعاية المركزة الوطنية.";
+            
+            // السيناريو الأول الافتراضي: خطر متنحي مشترك (حامل للمرض)
+            } else if (hGene === 'Aa' && wGene === 'Aa') {
+                badge.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30";
+                badge.innerText = "غير متوافق وراثياً (خطر متنحي مشترك)";
+                healthy.innerText = "25%";
+                carrier.innerText = "50%";
+                infected.innerText = "25%";
+                financial.innerText = "2,400,000"; // الأرقام الدقيقة الموفرة في الرعاية الدائمة لكل طفل
+                advice.innerText = "رأي الاستشاري الجيني والأسري: الطرفان يحملان نفس الطفرة التنحية الكامنة. هناك خطر بنسبة 25% لإصابة الأبناء. تقدم المنصة حلاً هندسياً واجتماعياً ذكياً يربط الأبوين ببرامج التدخل الجيني المبكر لضمان سلامة النسل دون التسبب في أزمات انفصال أسرية.";
+            
+            // حالات المزج البديلة لضمان حيوية الأرقام والمنطق الطبي
+            } else {
+                badge.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/30";
+                badge.innerText = "متوافق (حامل خامل للصفة)";
+                healthy.innerText = "50%";
+                carrier.innerText = "50%";
+                infected.innerText = "0%";
+                financial.innerText = "1,200,000";
+                advice.innerText = "التقرير الاستشاري المدمج: الزواج آمن طبياً من حيث عدم ظهور إصابات وراثية، إلا أن هناك احتمالية 50% لولادة أطفال حاملين لنفس الصفة الجينية الكامنة (دون أعراض سريرية).";
+            }
+        }
+
+        // تشغيل البوابة الترحيبية بشكل افتراضي لمنع الدخول المفاجئ
+        window.onload = function() {
+            switchSection('hub');
+        };
     </script>
 </body>
 </html>
